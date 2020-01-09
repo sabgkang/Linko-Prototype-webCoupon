@@ -31,9 +31,9 @@ firebase.auth().onAuthStateChanged(function (user) {
     $("#addCouponBtn").attr("disabled", true);
     
     //以下三行不知為何沒作用
-//    $("#courseDueBtn").attr("disabled", true);    
-//    $("#courseDetailBtn").attr("disabled", true);        
-//    $("#courseDeleteBtn").attr("disabled", true); 
+//    $("#couponDueBtn").attr("disabled", true);    
+//    $("#couponDetailBtn").attr("disabled", true);        
+//    $("#couponDeleteBtn").attr("disabled", true); 
     
 //    var aaa = $('#couponTable').DataTable();
 //    console.log(aaa);
@@ -49,9 +49,9 @@ firebase.auth().onAuthStateChanged(function (user) {
     $("#addCouponBtn").attr("disabled", false);
     
     //以下三行不知為何沒作用    
-//    $("#courseDueBtn").attr("disabled", false);    
-//    $("#courseDetailBtn").attr("disabled", false);        
-//    $("#courseDeleteBtn").attr("disabled", false);     
+//    $("#couponDueBtn").attr("disabled", false);    
+//    $("#couponDetailBtn").attr("disabled", false);        
+//    $("#couponDeleteBtn").attr("disabled", false);     
   }
 });
 
@@ -97,11 +97,12 @@ function readFromDB() {
     if (readTimes == toRead) $.loading.end();
   });
 
-  firebase.database().ref('users/林口運動中心/課程管理').once('value').then(function (snapshot) {
-    console.log("class read done");
+  firebase.database().ref('users/林口運動中心/優惠券管理').once('value').then(function (snapshot) {
+    console.log("coupon read done");
     readTimes++;
     var result = snapshot.val();
-    courseMember = JSON.parse(result.課程會員);
+    console.log()
+    couponMember = JSON.parse(result.優惠券會員);
 
     if (readTimes == toRead) $.loading.end();
   });

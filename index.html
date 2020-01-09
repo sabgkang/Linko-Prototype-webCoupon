@@ -119,7 +119,7 @@
 
 
   <!--  **** 優惠券細節的畫面，可以更新優惠券資料，繳費及簽到 **** -->
-  <div id="courseDetail" style="height: 600px; font-family:'Noto Sans TC'">
+  <div id="couponDetail" style="height: 600px; font-family:'Noto Sans TC'">
     <button class="btn-blue" onclick="backToHome()" style="float: left"><i class="fa fa-arrow-left"></i>&nbsp 回到 優惠券管理</button>
     <h2 id="couponNumberDetail" style="margin-left: 200px" value="00">優惠券頁面</h2>
     <div style="font-size: 20px;"><br>
@@ -127,14 +127,15 @@
 
       <div class="couponLabelDetail">有效期限</div> <input id="couponDateDetail" class="couponInputDetail" type="text" placeholder="請輸入有效期限"><br>
 
-      <div class="couponLabelDetail">其他說明</div> <input id="couponOtherDesc" class="couponInputDetail" type="text"><br>
+      <div class="couponLabelDetail">其他說明</div> <input id="couponOtherDescDetail" class="couponInputDetail" type="text"><br>
 
       <br>
       <button class="btn-blue" onclick="backToHome()"><i class="fa fa-arrow-left"></i>&nbsp 回到 優惠券管理</button>
       <button class="btn-red" onclick="couponUpdate()">更新 優惠券資料</button>
       <br>
      
-      <table id="courseMemberTable" class="display" style="width:100%;font-family:'Noto Sans TC'">
+<!--
+      <table id="couponMemberTable" class="display" style="width:100%;font-family:'Noto Sans TC'">
         <thead>
           <tr id="table-header">
             <th style="width: 50px">姓名</th>
@@ -148,6 +149,7 @@
           </tr>
         </thead>
       </table>
+-->
     </div> 
   </div>    
   <!--  **** 優惠券細節的畫面:結束 **** -->
@@ -181,13 +183,13 @@
     //      ["盧小宏", "Tony",    "男", "1966-03-03", "09XXXXXXXX", "A1XXXXXXXX", "新竹市"],   
     //    ];
     //
-    //    var courseMember =[
+    //    var couponMember =[
     //      ["U0001", ["謝小憲", "已繳費", "已簽到"], ["許小琦", "未繳費", "未簽到"]],
     //      ["U0002", ["許小琦", "已繳費", "未簽到"], ["謝小憲", "已繳費", "未簽到"]],   
     //      ["U0003", ["盧小宏", "未繳費", "未簽到"], ["謝小憲", "已繳費", "未簽到"]],           
     //    ];
     //
-    //    var courseMemberSet = [
+    //    var couponMemberSet = [
     //      ["謝東憲", "Jacky", "09XXXXXXXX", "A1XXXXXXXX", "台北市總統府", "YES", "NO"],
     //    ];
     //
@@ -208,12 +210,12 @@
     // 全域變數，偷懶用，容易產生麻煩的 bugs
     var couponData = [];
     var couponHistory = [];
-    var courseMemberSet = [];
+    var couponMemberSet = [];
     var coachSet = [];
     var memberData = [];
     var couponNymber;
 
-    // 從 Firebase 資料庫取得 couponData, couponHistory, memberData, courseMember, coachSet, 
+    // 從 Firebase 資料庫取得 couponData, couponHistory, memberData, couponMember, coachSet, 
     // 定義在 js/firebase-ops.js 中
     readFromDB();
 
@@ -278,10 +280,7 @@
       function myFunctionR() {
         console.log("Read Database");
 
-        //var userId = firebase.auth().currentUser.uid;
-
-        //          var aaa = firebase.database().ref('users/林口運動中心/'+userId+'/團課課程').once('value').then(function(snapshot) {
-        var aaa = firebase.database().ref('users/林口運動中心/團課課程/').once('value').then(function(snapshot) {
+        var aaa = firebase.database().ref('users/林口運動中心/優惠券/').once('value').then(function(snapshot) {
           console.log("done");
           var bbb = snapshot.val();
           console.log(bbb);
@@ -300,40 +299,17 @@
           alert("Please login first!");
           return 0;
         }
+         
+        var couponMember =[
+          ["C0001", ["謝小憲", "已繳費", "已使用"], ["許小琦", "未繳費", "未使用"]],   
+          ["C0002", ["小憲", "已繳費", "已使用"],   ["小琦", "未繳費", "未使用"]],  
+          ["C0003", ],            
+        ];          
 
-//          console.log("Write Database" + userId);
-//
-          //database.ref('users/林口運動中心/'+userId+'/團課課程').set({
-          database.ref('users/林口運動中心/優惠券').set({
-            現在優惠券: JSON.stringify(couponData),
-            過去優惠券: JSON.stringify(couponHistory),
-          }, function(error){
-               if (error) {
-                 //console.log(error);
-                 return 0;
-               }
-                 console.log('Write to database successful');
-          });
-//
-//          
-//           database.ref('users/林口運動中心/教練管理').set({
-//            老師資料: JSON.stringify(coachSet),  
-//           });
-//
-//
-//          database.ref('users/林口運動中心/客戶管理').set({
-//            會員資料: JSON.stringify(memberData),
-//
-////          });
-//          
-//        var courseMember =[
-//          ["U0001", ["謝小憲", "已繳費", "已簽到"], ["許小琦", "未繳費", "未簽到"]],         
-//        ];          
-//
-//        database.ref('users/林口運動中心/課程管理').set({
-//          課程會員: JSON.stringify(courseMember),
-//
-//        });
+        database.ref('users/林口運動中心/優惠券管理').set({
+          優惠券會員: JSON.stringify(couponMember),
+
+        });
 
 
         i++;

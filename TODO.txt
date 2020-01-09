@@ -1,6 +1,6 @@
 Bug to Fix:
 1. LINE Id 有 33字元，顯示超長，所以在客戶管理時，將 memberData 的 LineId 簡短為 UXXXX..YYYY，但刪除客戶時，會將簡化的 memberData 寫回資料庫，造成會員比對錯誤。@ Line 240 in 1-addMember.html =====> Fixed 2020-01-06 V0.98
-2. 重複週期 新增課程 會只有增加最後一個課程 到 courseMember ==> Fixed 2020-01-07 V0.99,  function.js line#85 移到 line#68
+2. 重複週期 新增課程 會只有增加最後一個課程 到 couponMember ==> Fixed 2020-01-07 V0.99,  function.js line#85 移到 line#68
 
 
 用 JavaScript 取得目前網址與其它網址參數簡單語法 http://www.wibibi.com/info.php?tid=82

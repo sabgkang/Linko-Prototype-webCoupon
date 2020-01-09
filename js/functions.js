@@ -61,37 +61,37 @@ function couponConfirm() {
 
     console.log(dataToAdd);
     
-    // 更新 local couponData 及 courseMember
+    // 更新 local couponData 及 couponMember
     couponData.push(dataToAdd);
-    courseMember.push(["C" + zeroFill(couponNum, 4)]); //Fix bug:重複週期 新增課程 會只有增加最後一個課程 到 courseMember
+    couponMember.push(["C" + zeroFill(couponNum, 4)]); //Fix bug:重複週期 新增優惠券 會只有增加最後一個優惠券 到 couponMember
   }
   
 
 
-  // 課程寫入資料庫
-//  database.ref('users/林口運動中心/優惠券').set({
-//    現在優惠券: JSON.stringify(couponData),
-//    過去優惠券: JSON.stringify(couponHistory),
-//  }, function (error) {
-//    if (error) {
-//      console.log("Write to database error, revert couponData back");
-//      couponData.pop();
-//    }
-//    console.log('Write to database successful');
-//  });
-//
-//
-//  database.ref('users/林口運動中心/優惠券管理').set({
-//    優惠券會員: JSON.stringify(courseMember),
-//  }, function (error) {
-//    if (error) {
-//      //console.log(error);
-//      return 0;
-//    }
-//    console.log('Write to database successful');
-//  });
+  // 優惠券寫入資料庫
+  database.ref('users/林口運動中心/優惠券').set({
+    現在優惠券: JSON.stringify(couponData),
+    過去優惠券: JSON.stringify(couponHistory),
+  }, function (error) {
+    if (error) {
+      console.log("Write to database error, revert couponData back");
+      couponData.pop();
+    }
+    console.log('Write to database successful');
+  });
 
-  // 更新課程表格
+
+  database.ref('users/林口運動中心/優惠券管理').set({
+    優惠券會員: JSON.stringify(couponMember),
+  }, function (error) {
+    if (error) {
+      //console.log(error);
+      return 0;
+    }
+    console.log('Write to database successful');
+  });
+
+  // 更新優惠券表格
   var couponTable = $('#couponTable').DataTable();
   couponTable.clear().draw();
   couponTable.rows.add(couponData);
@@ -159,7 +159,7 @@ function refreshCourse() {
 function backToHome() {
   console.log("Refresh Course");
 
-  $("#courseDetail").hide();
+  $("#couponDetail").hide();
 
   $("#couponTable").show();
   $("#couponHistoryTable").show();
@@ -192,12 +192,7 @@ function couponUpdate() {
       couponNymber,
       $("#couponDetail").val(),
       $("#couponDateDetail").val(),
-      $("#couponOtherDesc").val(),
-//      $("#CaloriesDetail").val(),
-//      $("#maxPersonsDetail").val(),
-//      $("#assistNameDetail").val(),
-//      $("#feeDetail").val(),
-//      $("#otherDescDetail").val(),
+      $("#couponOtherDescDetail").val(),
     ];
 
     //console.log(dataToReplace);
@@ -211,7 +206,7 @@ function couponUpdate() {
       }
     }
         
-    // 課程寫入資料庫
+    // 優惠券寫入資料庫
     database.ref('users/林口運動中心/優惠券').set({
       現在優惠券: JSON.stringify(couponData),
       過去優惠券: JSON.stringify(couponHistory),
@@ -229,7 +224,7 @@ function couponUpdate() {
     couponTable.rows.add(couponData);
     couponTable.draw();
 
-    $("#courseDetail").hide();
+    $("#couponDetail").hide();
     $("#couponTable").show();
     $("#spacerBetweenTables").show();
     $("#couponHistoryTable").show();

@@ -77,29 +77,29 @@
   </div>
   <!--  ==================== 新增客戶 (HTML)=============================-->
 
-  <!--  ==================== 客戶已報名課程 (HTML)========================-->
-  <div id="myCourseDiv">
-    <h1 id="客戶已報名課程">已報名課程管理</h1>
+  <!--  ==================== 客戶已使用優惠券 (HTML)========================-->
+  <div id="myCouponDiv">
+    <h1 id="客戶已使用優惠券">已使用優惠券</h1>
     <hr>
-    <div id="myCourses">
-      <button class="btn-blue" id="addMemberBtn" onclick="closeMyCourses()">返回</button>
+    <div id="myCoupons">
+      <button class="btn-blue" id="useCouponBtn" onclick="closeMyCoupons()">返回</button>
 
-      <table id="myCoursesTable" class="display" style="font-family: 'Noto Sans TC';width: 100%">
+      <table id="usedCouponsTable" class="display" style="font-family: 'Noto Sans TC';width: 100%">
         <thead>
           <tr id="table-header">
-            <th style="width: 120px">現在課程編號</th>
-            <th>課程名稱</th>
-            <th style="width: 200px">老師</th>
-            <th style="width: 120px">時間</th>
+            <th style="width: 120px">優惠券編號</th>
+            <th>優惠券名稱</th>
+            <th style="width: 200px">老師</th>      
+            <th style="width: 120px">使用期限</th>
             <th style="width: 70px">卡路里燃燒</th>
-            <th style="width: 50px">繳費狀況</th>
+            <th style="width: 50px">使用狀況</th>
             <th style="width: 190px">操作</th>
           </tr>
         </thead>
       </table>
       <div style="height: 100px"></div>
       <hr>
-      <table id="myCoursesHistory" class="display" style="font-family: 'Noto Sans TC';width: 100% ">
+      <table id="myCouponsHistory" class="display" style="font-family: 'Noto Sans TC';width: 100% ">
         <thead>
           <tr id="table-header">
             <th style="width: 120px">歷史課程編號</th>
@@ -115,23 +115,23 @@
 
     </div>
   </div>
-  <!--  ==================== 客戶已報名課程 (HTML)========================-->
+  <!--  ==================== 客戶已使用優惠券 (HTML)========================-->
 
 
   <!--  ==================== 報名課程 (HTML)=============================-->
-  <div id="courseDiv">
+  <div id="couponDiv">
     <h1 id="報名課程">報名課程</h1>
     <hr>
-    <div id="courses">
-      <button class="btn-blue" id="returnBtn" onclick="returnFromCourses()">返回</button>
+    <div id="coupons">
+      <button class="btn-blue" id="returnBtn" onclick="returnFromCoupons()">返回</button>
 
-      <table id="notInCoursesTable" class="display" style="font-family: 'Noto Sans TC';width: 100%">
+      <table id="notUsedCouponTable" class="display" style="font-family: 'Noto Sans TC';width: 100%">
         <thead>
           <tr id="table-header">
-            <th style="width: 120px">現在課程編號</th>
-            <th>課程名稱</th>
+            <th style="width: 120px">可用優惠券編號</th>
+            <th>優惠券名稱</th>
             <th style="width: 200px">老師</th>
-            <th style="width: 120px">時間</th>
+            <th style="width: 120px">使用期限</th>
             <th style="width: 70px">卡路里燃燒</th>
             <th style="width: 50px">課程人數</th>
             <th style="width: 150px">操作</th>
@@ -178,11 +178,11 @@
     var isLogin = false;
     var memberData = [];
     var memberLineId =[];
-    var myCoursesData = [];
-    var myCoursesHistory = [];
+    var myCouponsData = [];
+    var myCouponsHistory = [];
     var couponData = [];
     var couponHistory = [];
-    var notInCourses=[];
+    var notInCoupons=[];
     var username;
     
     var userForAddingCourse;
@@ -210,24 +210,24 @@
     var readTimes = 0;
     var toRead = 3;
 
-    firebase.database().ref('users/林口運動中心/團課課程').once('value').then(function(snapshot) {
+    firebase.database().ref('users/林口運動中心/優惠券').once('value').then(function(snapshot) {
       console.log("data read done");
       readTimes++;
       var result = snapshot.val();
-      couponData = JSON.parse(result.現在課程);
-      couponHistory = JSON.parse(result.過去課程);
-      buildCoursesTable();
+      couponData = JSON.parse(result.現在優惠券);
+      couponHistory = JSON.parse(result.過去優惠券);
+      buildCouponsTable();
       if (readTimes == toRead) {
         $.loading.end();
       }
     });
 
     $.loading.start('Loading data');
-    firebase.database().ref('users/林口運動中心/課程管理').once('value').then(function(snapshot) {
+    firebase.database().ref('users/林口運動中心/優惠券管理').once('value').then(function(snapshot) {
       console.log("class read done");
       readTimes++;
       var result = snapshot.val();
-      courseMember = JSON.parse(result.課程會員);
+      couponMember = JSON.parse(result.優惠券會員);
       if (readTimes == toRead) $.loading.end();
     });
 
@@ -255,11 +255,11 @@
       }
     });
     
-    buildMyCoursesTable();
-    //buildCoursesTable();
+    buildUsedCouponsTable();
+    //buildCouponsTable();
     $("#addMemberInfo").hide();
-    $("#myCourseDiv").hide();
-    $("#courseDiv").hide();    
+    $("#myCouponDiv").hide();
+    $("#couponDiv").hide();    
 
     //======== Functions ===================//
 
@@ -298,8 +298,8 @@
           {
             //title: "操作",
             data: null,
-            defaultContent: "<button class = 'checkAttendBtn to-edit' style='width: 100px'>已報名課程</button> " +
-              "<button class = 'attendBtn to-edit' style='width: 100px'>報名新課程</button> " +
+            defaultContent: "<button class = 'checkUsedCoupons to-edit' style='width: 100px'>已使用優惠券</button> " +
+              "<button class = 'checkNewCoupons to-edit' style='width: 100px'>使用優惠券</button> " +
               "<button class = 'memberDeleteBtn to-delete'>刪除</button>"
           }
         ]
@@ -309,11 +309,11 @@
       $("#memberTable_info").css("font-family", "Noto Sans TC");
       $("#memberTable_paginate").css("font-family", "Noto Sans TC");
 
-      // ============ Function for checkAttendBtn ==================================================
-      $('#memberTable tbody').on('click', '.checkAttendBtn', function() {
-        console.log("checkAttendBtn is clicked");
+      // ============ Function for checkUsedCoupons ==================================================
+      $('#memberTable tbody').on('click', '.checkUsedCoupons', function() {
+        console.log("checkUsedCoupons is clicked");
 
-        $("#myCourseDiv").show();
+        $("#myCouponDiv").show();
         $("#memberDiv").hide();
 
 
@@ -323,40 +323,40 @@
         // 取消課程用
         userForCancelCourse = data[0];
 
-        $("#客戶已報名課程").text(data[0] + " - 已報名課程");
+        $("#客戶已使用優惠券").text(data[0] + " - 已使用優惠券");
 
-        var myCoursesNumbers = [];
-        courseMember.forEach(function(item, index, array) {
+        var myCouponsNumbers = [];
+        couponMember.forEach(function(item, index, array) {
           //console.log(item[1][0]);
           var itemLength = item.length;
           for (var i = 0; i < itemLength; i++) {
             //console.log(i, item[i][0]);
             if (item[i][0] == userName) {
-              myCoursesNumbers.push(item[0]);
+              myCouponsNumbers.push(item[0]);
             };
           }
         });
 
-        //console.log(myCoursesNumbers);
+        //console.log(myCouponsNumbers);
 
-        myCoursesData = [];
-        couponData.forEach(function(course, index, array) {
-          //console.log(course);
+        myCouponsData = [];
+        couponData.forEach(function(coupon, index, array) {
+          //console.log(coupon);
 
-          myCoursesNumbers.forEach(function(attended, index, array) {
-            if (attended == course[0]) {
+          myCouponsNumbers.forEach(function(attended, index, array) {
+            if (attended == coupon[0]) {
               //console.log("match", attended);
-              myCoursesData.push(course);
+              myCouponsData.push(coupon);
             }
           });
         });
         
-        // Modify my myCoursesData 課程人數 to 繳費狀況 based on courseMember
-        myCoursesData.forEach(function(course, index, array){
-          //console.log(course[0]); // 課程編號
+        // Modify my myCouponsData 課程人數 to 繳費狀況 based on couponMember
+        myCouponsData.forEach(function(coupon, index, array){
+          //console.log(coupon[0]); // 課程編號
           
-          courseMember.forEach(function(item, index, array){
-            if (item[0] == course[0]) {
+          couponMember.forEach(function(item, index, array){
+            if (item[0] == coupon[0]) {
               //console.log(item);
               
               for (var i=1; i<item.length;i++){
@@ -364,8 +364,8 @@
                 
                 if (item[i][0]==userName) {
                   //console.log(userName, item[i][1]);
-                  course[5]=item[i][1];
-                  //console.log("bbb", course);
+                  coupon[5]=item[i][1];
+                  //console.log("bbb", coupon);
                 }
               }
             }  
@@ -374,43 +374,43 @@
           //console.log("next");
         });
         
-        myCoursesHistory = [];
-        couponHistory.forEach(function(course, index, array) {
-          //console.log(course);
+        myCouponsHistory = [];
+        couponHistory.forEach(function(coupon, index, array) {
+          //console.log(coupon);
 
-          myCoursesNumbers.forEach(function(attended, index, array) {
-            if (attended == course[0]) {
+          myCouponsNumbers.forEach(function(attended, index, array) {
+            if (attended == coupon[0]) {
               //console.log("match", attended);
-              myCoursesHistory.push(course);
+              myCouponsHistory.push(coupon);
             }
           });
         });
 
 
-        var table = $('#myCoursesTable').DataTable();
+        var table = $('#usedCouponsTable').DataTable();
         table.clear();
-        table.rows.add(myCoursesData);
+        table.rows.add(myCouponsData);
         table.draw();
 
-        var table = $('#myCoursesHistory').DataTable();
+        var table = $('#myCouponsHistory').DataTable();
         table.clear();
-        table.rows.add(myCoursesHistory);
+        table.rows.add(myCouponsHistory);
         table.draw();
 
       });
 
 
-      // ============ Function for attendBtn ================================================== 
-      $('#memberTable tbody').on('click', '.attendBtn', function() {
-        console.log("attendBtn is clicked");
+      // ============ Function for checkNewCoupons ================================================== 
+      $('#memberTable tbody').on('click', '.checkNewCoupons', function() {
+        console.log("checkNewCoupons is clicked");
 
         var data = memberTable.row($(this).parents('tr')).data();
         userName = data[0];
         userForAddingCourse = data[0]; // simple patch
         
         // 尋找未報名的課程
-        var myCoursesNumbers = [];
-        courseMember.forEach(function(item, index, array) {
+        var myCouponsNumbers = [];
+        couponMember.forEach(function(item, index, array) {
           //console.log(item[1][0]);
           var itemLength = item.length;
           var matched = false;
@@ -420,31 +420,31 @@
               matched = true;
             };
           }
-          if (!matched) myCoursesNumbers.push(item[0]);
+          if (!matched) myCouponsNumbers.push(item[0]);
         });
 
-        //console.log("aaa", myCoursesNumbers);
+        //console.log("aaa", myCouponsNumbers);
 
-        notInCourses = [];
-        couponData.forEach(function(course, index, array) {
-          myCoursesNumbers.forEach(function(notAttended, index, array) {
-            if (notAttended == course[0]) {
+        notInCoupons = [];
+        couponData.forEach(function(coupon, index, array) {
+          myCouponsNumbers.forEach(function(notAttended, index, array) {
+            if (notAttended == coupon[0]) {
               //console.log("not match", attended);
-              notInCourses.push(course);
+              notInCoupons.push(coupon);
             }
           });
         });
                 
-        var table = $('#notInCoursesTable').DataTable();
+        var table = $('#notUsedCouponTable').DataTable();
         table.clear();
-        table.rows.add(notInCourses);
+        table.rows.add(notInCoupons);
         table.draw();
         
         $("#報名課程").text(userName + " - 報名課程");
        // console.log(userName);
 
         $("#memberDiv").hide();
-        $("#courseDiv").show();
+        $("#couponDiv").show();
 
       });
 
@@ -496,24 +496,24 @@
 
     }
 
-    function buildMyCoursesTable() {
-      var myCoursesTable = $('#myCoursesTable').DataTable({
-        data: myCoursesData,
+    function buildUsedCouponsTable() {
+      var usedCouponsTable = $('#usedCouponsTable').DataTable({
+        data: myCouponsData,
         order: false,
         pageLength: 10,
         lengthChange: false,
         deferRender: true,
-        columns: [{ //title: 課程編號
+        columns: [{ //title: 可用優惠券編號
             className: "centerCell"
           },
           {
-            //title: 課程名稱
+            //title: 優惠券名稱
           },
           { //title: "老師"
             className: "centerCell"
           },
           {
-            //title: "時間"
+            //title: "使用期限"
             className: "centerCell"
           },
           {
@@ -521,7 +521,7 @@
             className: "centerCell"
           },
           {
-            //title: "繳費狀況"
+            //title: "使用狀況"
             className: "centerCell"
           },
           {
@@ -534,12 +534,12 @@
       });
       
       // ============ Function for payFeeBtn ================================================== 
-      $('#myCoursesTable tbody').on('click', '.payFeeBtn', function() {
+      $('#usedCouponsTable tbody').on('click', '.payFeeBtn', function() {
         console.log("payFeeBtn is clicked");
                 
-        var myCoursesTable = $('#myCoursesTable').DataTable();
-        var data = myCoursesTable.row($(this).parents('tr')).data();
-        var courseName = data[0];
+        var usedCouponsTable = $('#usedCouponsTable').DataTable();
+        var data = usedCouponsTable.row($(this).parents('tr')).data();
+        var couponName = data[0];
         
         if (data[5]=="已繳費") {
           alert("已經繳過費");
@@ -556,28 +556,28 @@
         
         //更新表格
         data[5] = "已繳費";       
-        var memberTable = $('#myCoursesTable').DataTable();
+        var memberTable = $('#usedCouponsTable').DataTable();
         memberTable.clear().draw();
-        memberTable.rows.add(myCoursesData);
+        memberTable.rows.add(myCouponsData);
         memberTable.draw();        
         
-        //TODO: 更新 courseMember
-        courseMember.forEach(function(item, index, array) {
-          //console.log(item[0], courseName);
-          if (item[0]==courseName){
+        //TODO: 更新 couponMember
+        couponMember.forEach(function(item, index, array) {
+          //console.log(item[0], couponName);
+          if (item[0]==couponName){
             var itemLength = item.length;
             for (var i = 0; i < itemLength; i++) {
               //console.log(i, item[i][0]);
               if (item[i][0] == userName) {
-                item[i][1]="已繳費"; // 修改的是 courseMember
+                item[i][1]="已繳費"; // 修改的是 couponMember
               };
             };
           }
         });
         
-        //更新 courseMember to 資料庫                   
-          database.ref('users/林口運動中心/課程管理').set({
-            課程會員: JSON.stringify(courseMember),
+        //更新 couponMember to 資料庫                   
+          database.ref('users/林口運動中心/優惠券管理').set({
+            課程會員: JSON.stringify(couponMember),
           }, function(error){
                 if (error) {
                   //console.log(error);
@@ -588,25 +588,25 @@
       });   
       
       // ============ Function for cancelCourseBtn ================================================== 
-      $('#myCoursesTable tbody').on('click', '.cancelCourseBtn', function() {
+      $('#usedCouponsTable tbody').on('click', '.cancelCourseBtn', function() {
         console.log("cancelCourseBtn is clicked");
         
-        var myCoursesTable = $('#myCoursesTable').DataTable();
-        var data = myCoursesTable.row($(this).parents('tr')).data();
-        var courseName = data[0];
-        var courseIdx = -1;
+        var usedCouponsTable = $('#usedCouponsTable').DataTable();
+        var data = usedCouponsTable.row($(this).parents('tr')).data();
+        var couponName = data[0];
+        var couponIdx = -1;
         var alreadyInCourse = false;
         
         // 檢查是否已報過名
-        courseMember.forEach(function(course, index, array){
-          if (course[0]==courseName) {
-            for (var i=0; i< course.length; i++) {
-              //console.log(course[i][0]);
-              if (course[i][0]==userForCancelCourse) {
+        couponMember.forEach(function(coupon, index, array){
+          if (coupon[0]==couponName) {
+            for (var i=0; i< coupon.length; i++) {
+              //console.log(coupon[i][0]);
+              if (coupon[i][0]==userForCancelCourse) {
                 //alert("已經報過名了");
-                console.log(courseMember[index][i]);
+                console.log(couponMember[index][i]);
                 alreadyInCourse = true;
-                courseMember[index].splice(i, 1);
+                couponMember[index].splice(i, 1);
                 //return(0); //只跳出 forEach 迴圈
               }
             };
@@ -615,9 +615,9 @@
                    
         if(alreadyInCourse) {
           console.log("aaa");
-          closeMyCourses();
-          database.ref('users/林口運動中心/課程管理').set({
-            課程會員: JSON.stringify(courseMember),
+          closeMyCoupons();
+          database.ref('users/林口運動中心/優惠券管理').set({
+            課程會員: JSON.stringify(couponMember),
           }, function(error){
                 if (error) {
                   //console.log(error);
@@ -631,12 +631,12 @@
 
       });      
 
-      $("#myCoursesTable_filter").css("font-family", "Noto Sans TC");
-      $("#myCoursesTable_info").css("font-family", "Noto Sans TC");
-      $("#myCoursesTable_paginate").css("font-family", "Noto Sans TC");
+      $("#usedCouponsTable_filter").css("font-family", "Noto Sans TC");
+      $("#usedCouponsTable_info").css("font-family", "Noto Sans TC");
+      $("#usedCouponsTable_paginate").css("font-family", "Noto Sans TC");
 
-      var myCoursesHistory = $('#myCoursesHistory').DataTable({
-        data: myCoursesHistory,
+      var myCouponsHistory = $('#myCouponsHistory').DataTable({
+        data: myCouponsHistory,
         order: false,
         pageLength: 10,
         lengthChange: false,
@@ -665,21 +665,21 @@
           {
             //title: "操作",
             data: null,
-            defaultContent: "<button class = 'checkAttendBtn to-remark' style='width: 100px'>備註</button> "
+            defaultContent: "<button class = 'checkUsedCoupons to-remark' style='width: 100px'>備註</button> "
           }
         ]
       });
       
       //location.reload();
       
-      $("#myCoursesHistory_filter").css("font-family", "Noto Sans TC");
-      $("#myCoursesHistory_info").css("font-family", "Noto Sans TC");
-      $("#myCoursesHistory_paginate").css("font-family", "Noto Sans TC");
+      $("#myCouponsHistory_filter").css("font-family", "Noto Sans TC");
+      $("#myCouponsHistory_info").css("font-family", "Noto Sans TC");
+      $("#myCouponsHistory_paginate").css("font-family", "Noto Sans TC");
     }
 
-    function buildCoursesTable() {               
-      var coursesTable = $('#notInCoursesTable').DataTable({
-        data: notInCourses, //couponData,
+    function buildCouponsTable() {               
+      var couponsTable = $('#notUsedCouponTable').DataTable({
+        data: notInCoupons, //couponData,
         //order: false,
         pageLength: 10,
         lengthChange: false,
@@ -715,22 +715,22 @@
       
       
       // ============ Function for selectCourseBtn ================================================== 
-      $('#notInCoursesTable tbody').on('click', '.selectCourseBtn', function() {
+      $('#notUsedCouponTable tbody').on('click', '.selectCourseBtn', function() {
         console.log("selectCourseBtn is clicked");
         
-        var coursesTable = $('#notInCoursesTable').DataTable();
-        var data = coursesTable.row($(this).parents('tr')).data();
-        var courseName = data[0];
-        var courseIdx = -1;
+        var couponsTable = $('#notUsedCouponTable').DataTable();
+        var data = couponsTable.row($(this).parents('tr')).data();
+        var couponName = data[0];
+        var couponIdx = -1;
         var alreadyInCourse = false;
         // 檢查是否已報過名
-        courseMember.forEach(function(course, index, array){
-          if (course[0]==courseName) {
-            //console.log(courseName);
-            courseIdx = index;
-            for (var i=0; i< course.length; i++) {
-              //console.log(course[i][0]);
-              if (course[i][0]==userForAddingCourse) {
+        couponMember.forEach(function(coupon, index, array){
+          if (coupon[0]==couponName) {
+            //console.log(couponName);
+            couponIdx = index;
+            for (var i=0; i< coupon.length; i++) {
+              //console.log(coupon[i][0]);
+              if (coupon[i][0]==userForAddingCourse) {
                 alert("您已經報過此課程了");
                 alreadyInCourse = true;
                 return(0); //只跳出 forEach 迴圈
@@ -738,13 +738,13 @@
             };
           }
         })        
-        //console.log(courseIdx);
+        //console.log(couponIdx);
         
         if(!alreadyInCourse) {
-          courseMember[courseIdx].push([userForAddingCourse, "未繳費", "未簽到"]);
-          // Write courseMember to database
-          database.ref('users/林口運動中心/課程管理').set({
-            課程會員: JSON.stringify(courseMember),
+          couponMember[couponIdx].push([userForAddingCourse, "未繳費", "未簽到"]);
+          // Write couponMember to database
+          database.ref('users/林口運動中心/優惠券管理').set({
+            課程會員: JSON.stringify(couponMember),
           }, function(error){
                 if (error) {
                   //console.log(error);
@@ -753,15 +753,15 @@
                   //console.log('Write to database successful');
                   //console.log("aaa", $("#joinBtn").text());
                   alert("報名成功!");
-                  //closeMyCourses();
+                  //closeMyCoupons();
           });          
         }      
 
       });
       
-      $("#notInCoursesTable_filter").css("font-family", "Noto Sans TC");
-      $("#notInCoursesTable_info").css("font-family", "Noto Sans TC");
-      $("#notInCoursesTable_paginate").css("font-family", "Noto Sans TC");
+      $("#notUsedCouponTable_filter").css("font-family", "Noto Sans TC");
+      $("#notUsedCouponTable_info").css("font-family", "Noto Sans TC");
+      $("#notUsedCouponTable_paginate").css("font-family", "Noto Sans TC");
     }
 
     function signIn() {
@@ -868,15 +868,15 @@
     }
 
 
-    function closeMyCourses() {
-      console.log("close myCourses");
-      $("#myCourseDiv").hide();
+    function closeMyCoupons() {
+      console.log("close myCoupons");
+      $("#myCouponDiv").hide();
       $("#memberDiv").show();
     }
     
-    function returnFromCourses() {
-      console.log("returnFromCourses");
-      $("#courseDiv").hide();   
+    function returnFromCoupons() {
+      console.log("returnFromCoupons");
+      $("#couponDiv").hide();   
       $("#memberDiv").show();
            
     }
