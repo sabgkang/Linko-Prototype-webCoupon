@@ -172,18 +172,18 @@ function initMainPage() {
     var data = couponTable.row($(this).parents('tr')).data();
     //console.log("detail:" + data[0]);
 
-    $("#couponNumberDetail").text("簽到頁面 - " + data[0] + " "+ data[1] + " @" + data[3]);
+    $("#couponNumberDetail").text("優惠券頁面 - " + data[0] + " "+ data[1]);
     
-    courseForDetail = data[0];
+    couponNymber = data[0];
 
-    $("#courseNameDetail").val(data[1]);
-    $("#couponNameDetail").val(data[2]);
-    $("#assistNameDetail").val(data[6]);
-    $("#courseTimeDetail").val(data[3]);
-    $("#CaloriesDetail").val(data[4]);
-    $("#maxPersonsDetail").val(data[5]);
-    $("#feeDetail").val(data[7]);
-    $("#otherDescDetail").val(data[8]);
+    $("#couponDetail").val(data[1]);
+    $("#couponDateDetail").val(data[2]);
+    //$("#assistNameDetail").val(data[6]);
+    $("#couponOtherDesc").val(data[3]);
+    //$("#CaloriesDetail").val(data[4]);
+    //$("#maxPersonsDetail").val(data[5]);
+    //$("#feeDetail").val(data[7]);
+    //$("#otherDescDetail").val(data[8]);
 
     courseMember.forEach(function (item, index, array) {
       if (item[0] == data[0]) {
@@ -392,7 +392,7 @@ function initMainPage() {
     var thisIndex;
     courseMember.forEach(function(item, index, array) {
       //console.log(item[1][0]);
-      if (item[0]== courseForDetail) {
+      if (item[0]== couponNymber) {
         //console.log(item, data[0]);
         thisCourse = item;
         thisIndex = index;
@@ -453,7 +453,7 @@ function initMainPage() {
     var thisIndex;
     courseMember.forEach(function(item, index, array) {
       //console.log(item[1][0]);
-      if (item[0]== courseForDetail) {
+      if (item[0]== couponNymber) {
         //console.log(item, data[0]);
         thisCourse = item;
         thisIndex = index;
@@ -515,7 +515,7 @@ function initMainPage() {
     var thisIndex;
     courseMember.forEach(function(item, index, array) {
       //console.log(item[1][0]);
-      if (item[0]== courseForDetail) {
+      if (item[0]== couponNymber) {
         //console.log(item, data[0]);
         thisCourse = item;
         thisIndex = index;
