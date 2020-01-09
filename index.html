@@ -63,7 +63,7 @@
     <thead>
       <tr id="table-header">
         <th style="width: 100px">優惠券編號</th>
-        <th>優惠券名稱</th>
+        <th>優惠券內容</th>
         <th style="width: 120px">有效期限</th>
 
         <th style="width: 150px">操作</th>
@@ -71,9 +71,9 @@
       </tr>
     </thead>
   </table>
-  <!--  **** 進行中課程的畫面:結束 **** -->
+  <!--  **** 進行中優惠券的畫面:結束 **** -->
   
-  <!--  **** 課程歷史的畫面 **** ?? 應該可以包成一個大 DIV，方便 hide() 和 show()?? -->  
+  <!--  **** 優惠券歷史的畫面 **** ?? 應該可以包成一個大 DIV，方便 hide() 和 show()?? -->  
   <div id="spacerBetweenTables" style="height: 100px; text-align: ">
     <div style="height: 50px"></div>
     <hr>
@@ -83,8 +83,8 @@
   <table id="couponHistoryTable" class="display" style="width:100%;">
     <thead>
       <tr id="table-header">
-        <th style="width: 100px">課程編號</th>
-        <th>優惠券名稱</th>
+        <th style="width: 100px">優惠券編號</th>
+        <th>優惠券內容</th>
         <th style="width: 120px">有效期限</th>
         <th style="width: 150px"></th>
       </tr>
@@ -117,39 +117,33 @@
   <!--  **** 新增優惠券的畫面:結束 **** -->
   
 
-
-  <!--  **** 優惠券細節的畫面，可以更新優惠券資料，繳費及簽到 **** -->
+  <!--  **** 優惠券細節的畫面，可以更新優惠券資料，使用及確認 **** -->
   <div id="couponDetail" style="height: 600px; font-family:'Noto Sans TC'">
     <button class="btn-blue" onclick="backToHome()" style="float: left"><i class="fa fa-arrow-left"></i>&nbsp 回到 優惠券管理</button>
     <h2 id="couponNumberDetail" style="margin-left: 200px" value="00">優惠券頁面</h2>
-    <div style="font-size: 20px;"><br>
-      <div class="couponLabelDetail">優惠券名稱</div> <input id="couponDetail" class="couponInputDetail" type="text" placeholder="請輸入優惠券名稱"><br>
+    <div ><br>
+      <div class="couponLabelDetail">優惠券內容</div> <input id="couponDetail" class="couponInputDetail" type="text" placeholder="請輸入優惠券內容"><br>
 
       <div class="couponLabelDetail">有效期限</div> <input id="couponDateDetail" class="couponInputDetail" type="text" placeholder="請輸入有效期限"><br>
 
       <div class="couponLabelDetail">其他說明</div> <input id="couponOtherDescDetail" class="couponInputDetail" type="text"><br>
 
       <br>
+
       <button class="btn-blue" onclick="backToHome()"><i class="fa fa-arrow-left"></i>&nbsp 回到 優惠券管理</button>
       <button class="btn-red" onclick="couponUpdate()">更新 優惠券資料</button>
       <br>
-     
-<!--
+     <hr>
       <table id="couponMemberTable" class="display" style="width:100%;font-family:'Noto Sans TC'">
         <thead>
           <tr id="table-header">
-            <th style="width: 50px">姓名</th>
-            <th style="width: 50px">LINE ID</th>
-            <th style="width: 50px">電話</th>
-            <th style="width: 50px">身分證號</th>
-            <th>地址</th>
-            <th style="width: 20px">繳費</th>
-            <th style="width: 20px">簽到</th>
-            <th style="width: 30px">操作</th>
+            <th>客戶姓名</th>
+            <th>使用</th>
+            <th>確認</th>
+            <th style="width:  200px;">操作</th>
           </tr>
         </thead>
       </table>
--->
     </div> 
   </div>    
   <!--  **** 優惠券細節的畫面:結束 **** -->
@@ -213,7 +207,7 @@
     var couponMemberSet = [];
     var coachSet = [];
     var memberData = [];
-    var couponNymber;
+    var couponNumber;
 
     // 從 Firebase 資料庫取得 couponData, couponHistory, memberData, couponMember, coachSet, 
     // 定義在 js/firebase-ops.js 中
@@ -284,8 +278,8 @@
           console.log("done");
           var bbb = snapshot.val();
           console.log(bbb);
-          console.log(JSON.parse(bbb.現在課程));
-          couponData = JSON.parse(bbb.現在課程);
+          console.log(JSON.parse(bbb.現在優惠券));
+          couponData = JSON.parse(bbb.現在優惠券);
         });
 
       }

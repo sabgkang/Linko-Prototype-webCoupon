@@ -189,7 +189,7 @@ function couponUpdate() {
     return 0;
   } else {
     var dataToReplace = [
-      couponNymber,
+      couponNumber,
       $("#couponDetail").val(),
       $("#couponDateDetail").val(),
       $("#couponOtherDescDetail").val(),
@@ -200,7 +200,7 @@ function couponUpdate() {
     // 尋找 couponData 這筆資料，並取代
     for (var i =0; i< couponData.length; i++){
       //console.log(couponData[i][0]);
-      if (couponData[i][0]==couponNymber) {
+      if (couponData[i][0]==couponNumber) {
         couponData[i] = dataToReplace;
         break;
       }

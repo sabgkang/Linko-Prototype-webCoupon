@@ -18,7 +18,7 @@ function initMainPage() {
         className: "centerCell"
               },
       {
-        //title: "優惠券名稱", 不對中，對左
+        //title: "優惠券內容", 不對中，對左
               },
       {
         //title: "有效期限"
@@ -119,22 +119,22 @@ function initMainPage() {
     $("#addCouponBtn").hide();
     $("#refreshBtn").hide();
 
-//    $("#couponMemberTable_filter").css({
-//      "font-size": "16px"
-//    });
-//    $("#couponMemberTable_info").css({
-//      "font-size": "16px"
-//    });
-//    $("#couponMemberTable_paginate").css({
-//      "font-size": "16px"
-//    });
+    $("#couponMemberTable_filter").css({
+      "font-size": "16px"
+    });
+    $("#couponMemberTable_info").css({
+      "font-size": "16px"
+    });
+    $("#couponMemberTable_paginate").css({
+      "font-size": "16px"
+    });
 
     var data = couponTable.row($(this).parents('tr')).data();
     //console.log("detail:" + data[0]);
 
     $("#couponNumberDetail").text("優惠券頁面 - " + data[0] + " "+ data[1]);
     
-    couponNymber = data[0];
+    couponNumber = data[0];
 
     $("#couponDetail").val(data[1]);
     $("#couponDateDetail").val(data[2]);
@@ -153,14 +153,9 @@ function initMainPage() {
           });
 
           // Convert 
-          var dataToAdd = tmp1.slice(0, 2);
-          var tmp2 = tmp1.slice(4, 7);
-          tmp2.forEach(function (obj, idx, array) {
-            dataToAdd.push(obj);
-          })
+          var dataToAdd = tmp1.slice(0, 1);
 
           dataToAdd.push(item1[1], item1[2]);
-          console.log("bbbbb", dataToAdd);
 
           couponMemberSet.push(dataToAdd);
         });
@@ -169,9 +164,9 @@ function initMainPage() {
       }
     });
 
-//    couponMemberTable.clear().draw();
-//    couponMemberTable.rows.add(couponMemberSet);
-//    couponMemberTable.draw();
+    couponMemberTable.clear().draw();
+    couponMemberTable.rows.add(couponMemberSet);
+    couponMemberTable.draw();
 
     $("#couponDetail").show();
 
@@ -251,7 +246,7 @@ function initMainPage() {
         className: "centerCell"
               },
       {
-        //title: "優惠券名稱", 不對中，對左
+        //title: "優惠券內容", 不對中，對左
               },
       {
         //title: "有效期限"
@@ -291,170 +286,158 @@ function initMainPage() {
       
   });
 
-//  var couponMemberTable = $('#couponMemberTable').DataTable({
-//    data: couponMemberSet,
-//    pageLength: 8,
-//    lengthChange: false,
-//    deferRender: true,
-//    columns: [{ //title: "Name"
-//        className: "centerCell"
+  var couponMemberTable = $('#couponMemberTable').DataTable({
+    data: couponMemberSet,
+    pageLength: 8,
+    lengthChange: false,
+    deferRender: true,
+    columns: [{ //title: "優惠券編號"
+        className: "centerCell"
+              },
+//      { //title: "優惠券內容"
+//        //className: "centerCell"
 //              },
-//      {
-//        //title: "LINE ID"
-//        className: "centerCell"
-//              },
-//      { //title: "電話"
-//        className: "centerCell"
-//              },
-//      {
-//        //title: "身分證號"
-//        className: "centerCell"
-//              },
-//      {
-//        //title: "地址"
-//        className: "centerCell"
-//              },
-//      {
-//        //title: "繳費"
-//        className: "centerCell"
-//              },
-//      {
-//        //title: "簽到"
-//        className: "centerCell"
-//              },
-//      {
-//        //title: "操作",
-//        className: "centerCell",
-//        data: null,
-//        defaultContent: "<button class = 'payButton to-edit'>繳費</button> " +
-//          "<button class = 'checkInButton to-edit'>簽到</button> " +
-//          "<button class = 'resetButton to-edit'>重置</button> " 
-//              }
-//            ]
-//  });
+      {
+        //title: "使用"
+        className: "centerCell"
+              },
+      {
+        //title: "確認"
+        className: "centerCell"
+              },
+      {
+        //title: "操作",
+        className: "centerCell",
+        data: null,
+        defaultContent: "<button class = 'cancelUsingCoupon to-edit' style='width:80px'>取消使用</button> " 
+                      + "<button class = 'confirmUsingCoupon to-edit' style='width:90px'>確認使用</button> "      
+       
+              }
+            ]
+  });
   
-//  $('#couponMemberTable tbody').on('click', '.payButton', function () {
-//    var confirmIt = confirm("請確定已繳費!");
-//    if (!confirmIt) return 0;
-//    
-//    console.log("payButton is clicked");
-//
-//    //var data = couponMemberTable.row($(this)).data();
-//    var data = couponMemberTable.row($(this).parents('tr')).data();    
-//    //console.log(data[0]);
-//    
-//    var thisCourse;
-//    var thisIndex;
-//    couponMember.forEach(function(item, index, array) {
-//      //console.log(item[1][0]);
-//      if (item[0]== couponNymber) {
-//        //console.log(item, data[0]);
-//        thisCourse = item;
-//        thisIndex = index;
-//      }
-//    });
-//      
-//    //console.log(thisCourse, thisIndex, data[0]);
-//      
-//    var thisCourseLength = thisCourse.length;
-//    var thisI;
-//    for (var i = 0; i < thisCourseLength; i++) {
-//      if (thisCourse[i][0] == data[0]) {
-//        //console.log(thisCourse[i], thisIndex, i);
-//        thisI = i;
-//      };
-//    }   
-//    
-//    //console.log(couponMember[thisIndex][thisI][0],couponMember[thisIndex][thisI][1]);
-//    couponMember[thisIndex][thisI][1] = "已繳費";
-//
-//    // Update couponMemberSet 及其 Table  
-//    for (var i=0; i< couponMemberSet.length; i++){
-//      //console.log(couponMemberSet[i][0], data[0]);
-//      if (couponMemberSet[i][0] == data[0]) {
-//        //console.log("match");
-//        couponMemberSet[i][5] = "已繳費";
-//      };
-//    };
-//    
-//    var table = $('#couponMemberTable').DataTable();
-//    table.clear().draw();
-//    table.rows.add(couponMemberSet);
-//    table.draw();    
-//    
-//    // Write couponMember to database
-//    database.ref('users/林口運動中心/優惠券管理').set({
-//      課程會員: JSON.stringify(couponMember),
-//    }, function (error) {
-//      if (error) {
-//        //console.log(error);
-//        return 0;
-//      }
-//      console.log('Write to database successful');
-//    }); 
-//    
-//  });
+  $('#couponMemberTable tbody').on('click', '.cancelUsingCoupon', function () {
+    var confirmIt = confirm("請確定已繳費!");
+    if (!confirmIt) return 0;
+    
+    console.log("cancelUsingCoupon is clicked");
 
-//  $('#couponMemberTable tbody').on('click', '.checkInButton', function () {
-//    var confirmIt = confirm("請確定已簽到!");
-//    if (!confirmIt) return 0;    
-//    console.log("checkInButton is clicked");
-//
-//    //var data = couponMemberTable.row($(this)).data();
-//    var data = couponMemberTable.row($(this).parents('tr')).data();    
-//    //console.log(data[0]);
-//    
-//    var thisCourse;
-//    var thisIndex;
-//    couponMember.forEach(function(item, index, array) {
-//      //console.log(item[1][0]);
-//      if (item[0]== couponNymber) {
-//        //console.log(item, data[0]);
-//        thisCourse = item;
-//        thisIndex = index;
-//      }
-//    });
-//      
-//    //console.log(thisCourse, thisIndex, data[0]);
-//      
-//    var thisCourseLength = thisCourse.length;
-//    var thisI;
-//    for (var i = 0; i < thisCourseLength; i++) {
-//      if (thisCourse[i][0] == data[0]) {
-//        //console.log(thisCourse[i], thisIndex, i);
-//        thisI = i;
-//      };
-//    }   
-//    
-//    //console.log(couponMember[thisIndex][thisI][2]);
-//    couponMember[thisIndex][thisI][2] = "已簽到";
-//
-//    // Update couponMemberSet 及其 Table
-//    for (var i=0; i< couponMemberSet.length; i++){
-//      //console.log(couponMemberSet[i][0], data[0]);
-//      if (couponMemberSet[i][0] == data[0]) {
-//        //console.log("match");
-//        couponMemberSet[i][6] = "已簽到";
-//      };
-//    };
-//    
-//    var table = $('#couponMemberTable').DataTable();
-//    table.clear().draw();
-//    table.rows.add(couponMemberSet);
-//    table.draw();  
-//    
-//    // Write couponMember to database
-//    database.ref('users/林口運動中心/優惠券管理').set({
-//      課程會員: JSON.stringify(couponMember),
-//    }, function (error) {
-//      if (error) {
-//        //console.log(error);
-//        return 0;
-//      }
-//      console.log('Write to database successful');
-//    });
-//    
-//  });  
+    //var data = couponMemberTable.row($(this)).data();
+    var data = couponMemberTable.row($(this).parents('tr')).data();    
+    //console.log(data[0]);
+    
+    var thisCourse;
+    var thisIndex;
+    couponMember.forEach(function(item, index, array) {
+      //console.log(item[1][0]);
+      if (item[0]== couponNumber) {
+        //console.log(item, data[0]);
+        thisCourse = item;
+        thisIndex = index;
+      }
+    });
+      
+    //console.log(thisCourse, thisIndex, data[0]);
+      
+    var thisCourseLength = thisCourse.length;
+    var thisI;
+    for (var i = 0; i < thisCourseLength; i++) {
+      if (thisCourse[i][0] == data[0]) {
+        //console.log(thisCourse[i], thisIndex, i);
+        thisI = i;
+      };
+    }   
+    
+    //console.log(couponMember[thisIndex][thisI][0],couponMember[thisIndex][thisI][1]);
+    couponMember[thisIndex][thisI][1] = "已繳費";
+
+    // Update couponMemberSet 及其 Table  
+    for (var i=0; i< couponMemberSet.length; i++){
+      //console.log(couponMemberSet[i][0], data[0]);
+      if (couponMemberSet[i][0] == data[0]) {
+        //console.log("match");
+        couponMemberSet[i][5] = "已繳費";
+      };
+    };
+    
+    var table = $('#couponMemberTable').DataTable();
+    table.clear().draw();
+    table.rows.add(couponMemberSet);
+    table.draw();    
+    
+    // Write couponMember to database
+    database.ref('users/林口運動中心/優惠券管理').set({
+      課程會員: JSON.stringify(couponMember),
+    }, function (error) {
+      if (error) {
+        //console.log(error);
+        return 0;
+      }
+      console.log('Write to database successful');
+    }); 
+    
+  });
+
+  $('#couponMemberTable tbody').on('click', '.confirmUsingCoupon', function () {
+    var confirmIt = confirm("請確定已簽到!");
+    if (!confirmIt) return 0;    
+    console.log("confirmUsingCoupon is clicked");
+
+    //var data = couponMemberTable.row($(this)).data();
+    var data = couponMemberTable.row($(this).parents('tr')).data();    
+    //console.log(data[0]);
+    
+    var thisCourse;
+    var thisIndex;
+    couponMember.forEach(function(item, index, array) {
+      //console.log(item[1][0]);
+      if (item[0]== couponNumber) {
+        //console.log(item, data[0]);
+        thisCourse = item;
+        thisIndex = index;
+      }
+    });
+      
+    //console.log(thisCourse, thisIndex, data[0]);
+      
+    var thisCourseLength = thisCourse.length;
+    var thisI;
+    for (var i = 0; i < thisCourseLength; i++) {
+      if (thisCourse[i][0] == data[0]) {
+        //console.log(thisCourse[i], thisIndex, i);
+        thisI = i;
+      };
+    }   
+    
+    //console.log(couponMember[thisIndex][thisI][2]);
+    couponMember[thisIndex][thisI][2] = "已簽到";
+
+    // Update couponMemberSet 及其 Table
+    for (var i=0; i< couponMemberSet.length; i++){
+      //console.log(couponMemberSet[i][0], data[0]);
+      if (couponMemberSet[i][0] == data[0]) {
+        //console.log("match");
+        couponMemberSet[i][6] = "已簽到";
+      };
+    };
+    
+    var table = $('#couponMemberTable').DataTable();
+    table.clear().draw();
+    table.rows.add(couponMemberSet);
+    table.draw();  
+    
+    // Write couponMember to database
+    database.ref('users/林口運動中心/優惠券管理').set({
+      課程會員: JSON.stringify(couponMember),
+    }, function (error) {
+      if (error) {
+        //console.log(error);
+        return 0;
+      }
+      console.log('Write to database successful');
+    });
+    
+  });  
 
 //  $('#couponMemberTable tbody').on('click', '.resetButton', function () {
 //    var confirmIt = confirm("請確定要重置!");
@@ -470,7 +453,7 @@ function initMainPage() {
 //    var thisIndex;
 //    couponMember.forEach(function(item, index, array) {
 //      //console.log(item[1][0]);
-//      if (item[0]== couponNymber) {
+//      if (item[0]== couponNumber) {
 //        //console.log(item, data[0]);
 //        thisCourse = item;
 //        thisIndex = index;
