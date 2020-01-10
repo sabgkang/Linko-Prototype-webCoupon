@@ -89,11 +89,8 @@
           <tr id="table-header">
             <th style="width: 120px">優惠券編號</th>
             <th>優惠券內容</th>
-            <th style="width: 200px">老師</th>      
             <th style="width: 120px">使用期限</th>
-            <th style="width: 70px">卡路里燃燒</th>
-            <th style="width: 50px">使用狀況</th>
-            <th style="width: 190px">操作</th>
+            <th style="width: 50px">操作</th>
           </tr>
         </thead>
       </table>
@@ -102,13 +99,12 @@
       <table id="myCouponsHistory" class="display" style="font-family: 'Noto Sans TC';width: 100% ">
         <thead>
           <tr id="table-header">
-            <th style="width: 120px">歷史優惠券編號</th>
+            <th style="width: 120px">歷史優惠券</th>
             <th>優惠券名稱</th>
-            <th style="width: 200px">老師</th>
-            <th style="width: 120px">時間</th>
-            <th style="width: 70px">卡路里燃燒</th>
-            <th style="width: 50px">優惠券人數</th>
-            <th style="width: 190px">操作</th>
+
+            <th style="width: 120px">使用期限</th>
+
+            <th style="width: 50px">操作</th>
           </tr>
         </thead>
       </table>
@@ -118,9 +114,9 @@
   <!--  ==================== 客戶已使用優惠券 (HTML)========================-->
 
 
-  <!--  ==================== 報名課程 (HTML)=============================-->
+  <!--  ==================== 可使用優惠券 (HTML)=============================-->
   <div id="couponDiv">
-    <h1 id="報名課程">報名課程</h1>
+    <h1 id="可使用優惠券">可用優惠券編號</h1>
     <hr>
     <div id="coupons">
       <button class="btn-blue" id="returnBtn" onclick="returnFromCoupons()">返回</button>
@@ -128,19 +124,17 @@
       <table id="notUsedCouponTable" class="display" style="font-family: 'Noto Sans TC';width: 100%">
         <thead>
           <tr id="table-header">
-            <th style="width: 120px">可用優惠券編號</th>
+            <th style="width: 120px">可用優惠券</th>
             <th>優惠券內容</th>
-            <th style="width: 200px">老師</th>
             <th style="width: 120px">使用期限</th>
-            <th style="width: 70px">卡路里燃燒</th>
-            <th style="width: 50px">課程人數</th>
-            <th style="width: 150px">操作</th>
+
+            <th style="width: 50px">操作</th>
           </tr>
         </thead>
       </table>
     </div>
   </div>
-  <!--  ==================== 報名課程 (HTML)=============================-->
+  <!--  ==================== 可使用優惠券 (HTML)=============================-->
 
 
   <!-- Insert these scripts at the bottom of the HTML, but before you use any Firebase services -->
@@ -185,7 +179,7 @@
     var notInCoupons=[];
     var username;
     
-    var userForAddingCourse;
+    var userForAddingCoupon;
     var userForCancelCourse;
 
     // Monitoring AuthState
@@ -399,16 +393,15 @@
 
       });
 
-
       // ============ Function for checkNewCoupons ================================================== 
       $('#memberTable tbody').on('click', '.checkNewCoupons', function() {
         console.log("checkNewCoupons is clicked");
 
         var data = memberTable.row($(this).parents('tr')).data();
         userName = data[0];
-        userForAddingCourse = data[0]; // simple patch
+        userForAddingCoupon = data[0]; // simple patch
         
-        // 尋找未報名的課程
+        // 尋找未使用的優惠券
         var myCouponsNumbers = [];
         couponMember.forEach(function(item, index, array) {
           //console.log(item[1][0]);
@@ -440,7 +433,7 @@
         table.rows.add(notInCoupons);
         table.draw();
         
-        $("#報名課程").text(userName + " - 報名課程");
+        $("#可使用優惠券").text(userName + " - 可使用優惠券");
        // console.log(userName);
 
         $("#memberDiv").hide();
@@ -509,93 +502,81 @@
           {
             //title: 優惠券內容
           },
-          { //title: "老師"
-            className: "centerCell"
-          },
           {
             //title: "使用期限"
             className: "centerCell"
           },
           {
-            //title: "卡路里燃燒"
-            className: "centerCell"
-          },
-          {
-            //title: "使用狀況"
-            className: "centerCell"
-          },
-          {
             //title: "操作",
             data: null,
-            defaultContent: "<button class = 'payFeeBtn to-edit' style='width: 100px'>繳費</button> " 
-                          + "<button class = 'cancelCourseBtn to-delete' style='width: 100px'>取消報名</button> "
+            defaultContent: "<button class = 'cancellUsageBtn to-edit' style='width: 100px'>取消使用</button> " 
           }
         ]
       });
       
-      // ============ Function for payFeeBtn ================================================== 
-      $('#usedCouponsTable tbody').on('click', '.payFeeBtn', function() {
-        console.log("payFeeBtn is clicked");
-                
-        var usedCouponsTable = $('#usedCouponsTable').DataTable();
-        var data = usedCouponsTable.row($(this).parents('tr')).data();
-        var couponName = data[0];
-        
-        if (data[5]=="已繳費") {
-          alert("已經繳過費");
-          return 0;
-        }
-        
-        var makePayment = confirm("確定已繳費");
-        if (!makePayment) {
-          return 0;
-        }
-        
-        //更新繳費狀況
-        console.log("進行繳費");
-        
-        //更新表格
-        data[5] = "已繳費";       
-        var memberTable = $('#usedCouponsTable').DataTable();
-        memberTable.clear().draw();
-        memberTable.rows.add(myCouponsData);
-        memberTable.draw();        
-        
-        //TODO: 更新 couponMember
-        couponMember.forEach(function(item, index, array) {
-          //console.log(item[0], couponName);
-          if (item[0]==couponName){
-            var itemLength = item.length;
-            for (var i = 0; i < itemLength; i++) {
-              //console.log(i, item[i][0]);
-              if (item[i][0] == userName) {
-                item[i][1]="已繳費"; // 修改的是 couponMember
-              };
-            };
-          }
-        });
+      // ============ Function for cancellUsageBtn ================================================== 
+//      $('#usedCouponsTable tbody').on('click', '.cancellUsageBtn', function() {
+//        console.log("cancellUsageBtn is clicked");
+//                
+//        var usedCouponsTable = $('#usedCouponsTable').DataTable();
+//        var data = usedCouponsTable.row($(this).parents('tr')).data();
+//        var couponName = data[0];
+//
+//        if (data[5]=="已繳費") {
+//          alert("已經繳過費");
+//          return 0;
+//        }
+//        
+//        var makePayment = confirm("確定已繳費");
+//        if (!makePayment) {
+//          return 0;
+//        }
+//        
+//        //更新繳費狀況
+//        console.log("進行繳費");
+//        
+//        //更新表格
+//        data[5] = "已繳費";       
+//        var memberTable = $('#usedCouponsTable').DataTable();
+//        memberTable.clear().draw();
+//        memberTable.rows.add(myCouponsData);
+//        memberTable.draw();        
+//        
+//        //更新 couponMember
+//        couponMember.forEach(function(item, index, array) {
+//          //console.log(item[0], couponName);
+//          if (item[0]==couponName){
+//            var itemLength = item.length;
+//            for (var i = 0; i < itemLength; i++) {
+//              //console.log(i, item[i][0]);
+//              if (item[i][0] == userName) {
+//                item[i][1]="已繳費"; // 修改的是 couponMember
+//              };
+//            };
+//          }
+//        });
         
         //更新 couponMember to 資料庫                   
-          database.ref('users/林口運動中心/優惠券管理').set({
-            優惠券會員: JSON.stringify(couponMember),
-          }, function(error){
-                if (error) {
-                  //console.log(error);
-                  return 0;
-                }
-                  console.log('Write to database successful');
-          });          
-      });   
+//          database.ref('users/林口運動中心/優惠券管理').set({
+//            優惠券會員: JSON.stringify(couponMember),
+//          }, function(error){
+//                if (error) {
+//                  //console.log(error);
+//                  return 0;
+//                }
+//                  console.log('Write to database successful');
+//          });          
+//      });   
       
-      // ============ Function for cancelCourseBtn ================================================== 
-      $('#usedCouponsTable tbody').on('click', '.cancelCourseBtn', function() {
-        console.log("cancelCourseBtn is clicked");
+      // ============ Function for cancellUsageBtn ================================================== 
+      $('#usedCouponsTable tbody').on('click', '.cancellUsageBtn', function() {
+        console.log("cancellUsageBtn is clicked");
         
         var usedCouponsTable = $('#usedCouponsTable').DataTable();
         var data = usedCouponsTable.row($(this).parents('tr')).data();
         var couponName = data[0];
         var couponIdx = -1;
-        var alreadyInCourse = false;
+        var alreadyInUse = false;
         
         // 檢查是否已報過名
         couponMember.forEach(function(coupon, index, array){
@@ -603,17 +584,31 @@
             for (var i=0; i< coupon.length; i++) {
               //console.log(coupon[i][0]);
               if (coupon[i][0]==userForCancelCourse) {
-                //alert("已經報過名了");
+                //alert("已經使用過了");
                 console.log(couponMember[index][i]);
-                alreadyInCourse = true;
+                alreadyInUse = true;
                 couponMember[index].splice(i, 1);
                 //return(0); //只跳出 forEach 迴圈
               }
             };
           }
         })
+        
+        var thisI=0;
+        for (var i=0; i<myCouponsData.length; i++) {
+          if (myCouponsData[i][0]==couponName) {
+            thisI = i; 
+            break;
+          }
+        }
+
+        myCouponsData.splice(thisI,1);
+        // redraw table
+        usedCouponsTable.clear();
+        usedCouponsTable.rows.add(myCouponsData);
+        usedCouponsTable.draw();
                    
-        if(alreadyInCourse) {
+        if(alreadyInUse) {
           console.log("aaa");
           closeMyCoupons();
           database.ref('users/林口運動中心/優惠券管理').set({
@@ -641,27 +636,18 @@
         pageLength: 10,
         lengthChange: false,
         deferRender: true,
-        columns: [{ //title: 課程編號
+        columns: [{ //title: 歷史優惠券
             className: "centerCell"
           },
           {
-            //title: 課程名稱
+            //title: 優惠券名稱
           },
-          { //title: "老師"
-            className: "centerCell"
-          },
+
           {
-            //title: "時間"
+            //title: "使用期限"
             className: "centerCell"
           },
-          {
-            //title: "卡路里燃燒"
-            className: "centerCell"
-          },
-          {
-            //title: "課程人數"
-            className: "centerCell"
-          },
+
           {
             //title: "操作",
             data: null,
@@ -677,85 +663,95 @@
       $("#myCouponsHistory_paginate").css("font-family", "Noto Sans TC");
     }
 
-    function buildCouponsTable() {               
+    function buildCouponsTable() {       
+      $("#couponDiv").show();
       var couponsTable = $('#notUsedCouponTable').DataTable({
         data: notInCoupons, //couponData,
         //order: false,
         pageLength: 10,
         lengthChange: false,
         deferRender: true,
-        columns: [{ //title: 課程編號
+        columns: [{ //title: 可用優惠券編號
             className: "centerCell"
           },
           {
-            //title: 課程名稱
+            //title: 優惠券內容
           },
-          { //title: "老師"
-            className: "centerCell"
-          },
+
           {
-            //title: "時間"
+            //title: "使用期限"
             className: "centerCell"
           },
-          {
-            //title: "卡路里燃燒"
-            className: "centerCell"
-          },
-          {
-            //title: "課程人數"
-            className: "centerCell"
-          },
+
           {
             //title: "操作",
             data: null,
-            defaultContent: "<button id='joinBtn' class = 'selectCourseBtn to-edit' style='width: 100px'>報名</button> "
+            defaultContent: "<button id='joinBtn' class = 'useCouponBtn to-edit' style='width: 100px'>使用</button> "
           }
         ]
       });
       
+      $("#couponDiv").hide();
       
-      // ============ Function for selectCourseBtn ================================================== 
-      $('#notUsedCouponTable tbody').on('click', '.selectCourseBtn', function() {
-        console.log("selectCourseBtn is clicked");
+      //TODO
+      // ============ Function for useCouponBtn ================================================== 
+      $('#notUsedCouponTable tbody').on('click', '.useCouponBtn', function() {
+        console.log("useCouponBtn is clicked");
         
         var couponsTable = $('#notUsedCouponTable').DataTable();
         var data = couponsTable.row($(this).parents('tr')).data();
         var couponName = data[0];
         var couponIdx = -1;
-        var alreadyInCourse = false;
+        var alreadyInUse = false;
         // 檢查是否已報過名
         couponMember.forEach(function(coupon, index, array){
           if (coupon[0]==couponName) {
             //console.log(couponName);
             couponIdx = index;
-            for (var i=0; i< coupon.length; i++) {
-              //console.log(coupon[i][0]);
-              if (coupon[i][0]==userForAddingCourse) {
-                alert("您已經報過此課程了");
-                alreadyInCourse = true;
-                return(0); //只跳出 forEach 迴圈
-              }
-            };
+            coupon.push([userForAddingCoupon, "已使用", "未確認"]);
+            
+//            for (var i=0; i< coupon.length; i++) {
+//              //console.log(coupon[i][0]);
+//              if (coupon[i][0]==userForAddingCoupon) {
+//                //alert("您已經報過此課程了");
+//                //alreadyInUse = true;
+//                return(0); //只跳出 forEach 迴圈
+//              }
+//            };
           }
-        })        
-        //console.log(couponIdx);
+        }) 
         
-        if(!alreadyInCourse) {
-          couponMember[couponIdx].push([userForAddingCourse, "未繳費", "未簽到"]);
-          // Write couponMember to database
-          database.ref('users/林口運動中心/優惠券管理').set({
-            優惠券會員: JSON.stringify(couponMember),
-          }, function(error){
-                if (error) {
-                  //console.log(error);
-                  return 0;
-                }
-                  //console.log('Write to database successful');
-                  //console.log("aaa", $("#joinBtn").text());
-                  alert("報名成功!");
-                  //closeMyCoupons();
-          });          
-        }      
+        //刪除 notInCoupons 的那一列，重劃表格
+        var thisI=0;
+        for (var i=0; i<notInCoupons.length; i++) {
+          if (notInCoupons[i][0]==couponName) {
+            thisI = i; 
+            break;
+          }
+        }
+
+        notInCoupons.splice(thisI,1);        
+        // redraw table
+        couponsTable.clear();
+        couponsTable.rows.add(notInCoupons);
+        couponsTable.draw();        
+        
+        
+
+        // Write couponMember to database
+        database.ref('users/林口運動中心/優惠券管理').set({
+          優惠券會員: JSON.stringify(couponMember),
+        }, function(error){
+              if (error) {
+                //console.log(error);
+                return 0;
+              }
+                //console.log('Write to database successful');
+                //console.log("aaa", $("#joinBtn").text());
+                alert("使用成功!");
+                //closeMyCoupons();
+        });          
+     
 
       });
       

@@ -48,6 +48,11 @@ function couponConfirm() {
     nextDateStr = nextDateStr.replace(/\//g, "-");
     //console.log(couponNum, nextDateStr);
     
+    if(nextDate == "Invalid Date") {
+      alert("有效期限日期錯誤");
+      return 0;
+    }
+    
     var couponNameTmp;
     couponNameTmp = (repeatTimes>1)? $("#couponName").val()+" ("+(i+1)+")":$("#couponName").val();
     
@@ -159,7 +164,7 @@ function refreshCourse() {
 function backToHome() {
   console.log("Refresh Course");
 
-  $("#couponDetail").hide();
+  $("#couponDetailDiv").hide();
 
   $("#couponTable").show();
   $("#couponHistoryTable").show();
@@ -183,9 +188,14 @@ function couponUpdate() {
     return 0;
   }
 
-  var confirmReplace = confirm("確定要更新此優惠券!");
+  var securityNum = Math.floor(Math.random()*8999+1000); 
+  var securityStr = "確定要更新此優惠券，請輸入確認碼: " + String(securityNum);
+  //console.log(prompt(securityStr));
+  var confirmIt = prompt(securityStr) == securityNum;
+  console.log("確認碼:", confirmIt);  
 
-  if (!confirmReplace) {
+  if (!confirmIt) {
+    alert("確認碼輸入錯誤，不進行更新動作");
     return 0;
   } else {
     var dataToReplace = [
@@ -224,7 +234,7 @@ function couponUpdate() {
     couponTable.rows.add(couponData);
     couponTable.draw();
 
-    $("#couponDetail").hide();
+    $("#couponDetailDiv").hide();
     $("#couponTable").show();
     $("#spacerBetweenTables").show();
     $("#couponHistoryTable").show();

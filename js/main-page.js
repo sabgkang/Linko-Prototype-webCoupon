@@ -2,7 +2,7 @@ function initMainPage() {
   $("#loginDiv").hide();
   $("#addCoupon").hide();
 //  $("#coachTable").hide();
-//  $("#couponDetail").hide();
+//  $("#couponDetailDiv").hide();
   $("#newCoachInfo").hide();
   $("#memberDiv").hide();
   $("#addMemberInfo").hide();
@@ -42,53 +42,59 @@ function initMainPage() {
       alert("必須登入後才能修改");
       return 0;
     }
-
-    var dueIt = false;
-    dueIt = confirm("確定要將優惠券過期!無法回復!");
-
-    if (dueIt) {
-      var data = couponTable.row($(this).parents('tr')).data();
-      console.log("delete:" + data[0]);
-
-      couponHistory.push(data);
-
-      couponData = couponData.filter(function (value, index, arr) {
-        return value[0] != data[0];
-      });
-
-      // 更新 couponNum
-      if (couponData.length>0) {
-        var tmp1 = couponData[couponData.length - 1][0];
-        var tmp2 = parseInt(tmp1.substr(1, 4));
-      } else tmp2 = 0;
-
-      if (couponHistory.length>0) {    
-        var tmp3 = couponHistory[couponHistory.length - 1][0];
-        var tmp4 = parseInt(tmp3.substr(1, 4));  
-      } else tmp4 = 0;
-
-      couponNum = (tmp4 > tmp2)? tmp4:tmp2;
-
-      // 更新 database
-      database.ref('users/林口運動中心/優惠券').set({
-        現在優惠券: JSON.stringify(couponData),
-        過去優惠券: JSON.stringify(couponHistory),
-      }, function (error) {
-        if (error) {
-          //console.log(error);
-          return 0;
-        }
-        console.log('Write to database successful');
-      });
-
-      couponTable.clear().draw();
-      couponTable.rows.add(couponData);
-      couponTable.draw();
-
-      couponHistoryTable.clear().draw();
-      couponHistoryTable.rows.add(couponHistory);
-      couponHistoryTable.draw();
+  
+    var securityNum = Math.floor(Math.random()*8999+1000); 
+    var securityStr = "確定要將優惠券過期!無法回復! 請輸入確認碼: " + String(securityNum);
+    //console.log(prompt(securityStr));
+    var confirmIt = prompt(securityStr) == securityNum;
+    console.log("確認碼:", confirmIt);
+    
+    if (!confirmIt) {
+      alert("確認碼輸入錯誤，不進行優惠券過期動作");
+      return 0;     
     }
+    
+    var data = couponTable.row($(this).parents('tr')).data();
+    console.log("delete:" + data[0]);
+
+    couponHistory.push(data);
+
+    couponData = couponData.filter(function (value, index, arr) {
+      return value[0] != data[0];
+    });
+
+    // 更新 couponNum
+    if (couponData.length>0) {
+      var tmp1 = couponData[couponData.length - 1][0];
+      var tmp2 = parseInt(tmp1.substr(1, 4));
+    } else tmp2 = 0;
+
+    if (couponHistory.length>0) {    
+      var tmp3 = couponHistory[couponHistory.length - 1][0];
+      var tmp4 = parseInt(tmp3.substr(1, 4));  
+    } else tmp4 = 0;
+
+    couponNum = (tmp4 > tmp2)? tmp4:tmp2;
+
+    // 更新 database
+    database.ref('users/林口運動中心/優惠券').set({
+      現在優惠券: JSON.stringify(couponData),
+      過去優惠券: JSON.stringify(couponHistory),
+    }, function (error) {
+      if (error) {
+        //console.log(error);
+        return 0;
+      }
+      console.log('Write to database successful');
+    });
+
+    couponTable.clear().draw();
+    couponTable.rows.add(couponData);
+    couponTable.draw();
+
+    couponHistoryTable.clear().draw();
+    couponHistoryTable.rows.add(couponHistory);
+    couponHistoryTable.draw();
 
   });
 
@@ -168,7 +174,7 @@ function initMainPage() {
     couponMemberTable.rows.add(couponMemberSet);
     couponMemberTable.draw();
 
-    $("#couponDetail").show();
+    $("#couponDetailDiv").show();
 
   });
 
@@ -179,61 +185,69 @@ function initMainPage() {
       alert("必須登入後才能刪除");
       return 0;
     }
+  
+    var securityNum = Math.floor(Math.random()*8999+1000); 
+    var securityStr = "確定要刪除此優惠券!無法回復! 請輸入確認碼: " + String(securityNum);
+    //console.log(prompt(securityStr));
+    var confirmIt = prompt(securityStr) == securityNum;
+    console.log("確認碼:", confirmIt);
+    
+    if (!confirmIt) {
+      alert("確認碼輸入錯誤，不進行優惠券刪除動作");
+      return 0;     
+    }    
+
     var data = couponTable.row($(this).parents('tr')).data();
+    
 
-    var deleteIt = false;
-    deleteIt = confirm("確定要刪除此優惠券!無法回復!");
+    //console.log("dddd");
+    couponData = couponData.filter(function (value, index, arr) {
+      return value[0] != data[0];
+    });
 
-    if (deleteIt) {
-      //console.log("dddd");
-      couponData = couponData.filter(function (value, index, arr) {
-        return value[0] != data[0];
-      });
+    // 更新 couponNum
+    if (couponData.length>0) {
+      var tmp1 = couponData[couponData.length - 1][0];
+      var tmp2 = parseInt(tmp1.substr(1, 4));
+    } else tmp2 = 0;
 
-      // 更新 couponNum
-      if (couponData.length>0) {
-        var tmp1 = couponData[couponData.length - 1][0];
-        var tmp2 = parseInt(tmp1.substr(1, 4));
-      } else tmp2 = 0;
+    if (couponHistory.length>0) {    
+      var tmp3 = couponHistory[couponHistory.length - 1][0];
+      var tmp4 = parseInt(tmp3.substr(1, 4));  
+    } else tmp4 = 0;
 
-      if (couponHistory.length>0) {    
-        var tmp3 = couponHistory[couponHistory.length - 1][0];
-        var tmp4 = parseInt(tmp3.substr(1, 4));  
-      } else tmp4 = 0;
+    couponNum = (tmp4 > tmp2)? tmp4:tmp2;
 
-      couponNum = (tmp4 > tmp2)? tmp4:tmp2;
+    // 更新 database
+    database.ref('users/林口運動中心/優惠券').set({
+      現在優惠券: JSON.stringify(couponData),
+      過去優惠券: JSON.stringify(couponHistory),
+    }, function (error) {
+      if (error) {
+        //console.log(error);
+        return 0;
+      }
+      console.log('Write to database successful');
+    });
 
-      // 更新 database
-      database.ref('users/林口運動中心/優惠券').set({
-        現在優惠券: JSON.stringify(couponData),
-        過去優惠券: JSON.stringify(couponHistory),
-      }, function (error) {
-        if (error) {
-          //console.log(error);
-          return 0;
-        }
-        console.log('Write to database successful');
-      });
+    couponMember = couponMember.filter(function (value, index, arr) {
+      return value[0] != data[0];
+    });
+    database.ref('users/林口運動中心/優惠券管理').set({
+      優惠券會員: JSON.stringify(couponMember),
+    }, function (error) {
+      if (error) {
+        //console.log(error);
+        return 0;
+      }
+      console.log('Write to database successful');
+    });
 
-      couponMember = couponMember.filter(function (value, index, arr) {
-        return value[0] != data[0];
-      });
-      database.ref('users/林口運動中心/優惠券管理').set({
-        優惠券會員: JSON.stringify(couponMember),
-      }, function (error) {
-        if (error) {
-          //console.log(error);
-          return 0;
-        }
-        console.log('Write to database successful');
-      });
+    console.log(couponData);
+    couponTable.clear().draw();
+    couponTable.rows.add(couponData);
+    couponTable.draw();
 
-      console.log(deleteIt);
-      console.log(couponData);
-      couponTable.clear().draw();
-      couponTable.rows.add(couponData);
-      couponTable.draw();
-    }
   });
 
   var couponHistoryTable = $('#couponHistoryTable').DataTable({
@@ -268,18 +282,10 @@ function initMainPage() {
     
     var data = couponHistoryTable.row($(this).parents('tr')).data();     
 
-    //console.log(data);
+    console.log(data);
     $("#couponName").val(data[1]);
-    $("#couponName").val(data[2]);
-    var dateStr = data[3].split(" ");
-    //console.log(dateStr[0]);
-    $("#couponDate").val(dateStr[0]);
-    $("#couponTime").val(dateStr[1]);
-    $("#Calories").val(data[4]);
-    $("#maxPersons").val(data[5]);
-    $("#assistName").val(data[6]);
-    $("#fee").val(data[7]);
-    $("#otherDesc").val(data[8]); 
+    //$("#couponDate").val(data[2]);
+    $("#couponOtherDesc").val(data[3]);
 
     
     addCoupon();
@@ -318,10 +324,19 @@ function initMainPage() {
   });
   
   $('#couponMemberTable tbody').on('click', '.cancelUsingCoupon', function () {
-    var confirmIt = confirm("NOT finish code yet 請確定要取消使用!");
-    if (!confirmIt) return 0;
-    
     console.log("cancelUsingCoupon is clicked");
+    
+    var securityNum = Math.floor(Math.random()*8999+1000); 
+    var securityStr = "確定取消優惠券使用，請輸入確認碼: " + String(securityNum);
+    //console.log(prompt(securityStr));
+    var confirmIt = prompt(securityStr) == securityNum;
+    console.log("確認碼:", confirmIt);
+    
+    if (!confirmIt) {
+      alert("確認碼輸入錯誤，不進行取消動作");
+      return 0;     
+    }
+    
 
     //var data = couponMemberTable.row($(this)).data();
     var data = couponMemberTable.row($(this).parents('tr')).data();    
@@ -350,16 +365,20 @@ function initMainPage() {
     }   
     
     //console.log(couponMember[thisIndex][thisI][0],couponMember[thisIndex][thisI][1]);
-    couponMember[thisIndex][thisI][2] = "已確認";
+    //couponMember[thisIndex][thisI][1] = "未使用";
+    couponMember[thisIndex].splice(thisI, 1);
 
     // Update couponMemberSet 及其 Table  
     for (var i=0; i< couponMemberSet.length; i++){
       //console.log(couponMemberSet[i][0], data[0]);
       if (couponMemberSet[i][0] == data[0]) {
         //console.log("match");
-        couponMemberSet[i][2] = "已確認";
+        //couponMemberSet[i][1] = "未使用";
+        thisI = i;
       };
     };
+    
+    couponMemberSet.splice(thisI, 1);
     
     var table = $('#couponMemberTable').DataTable();
     table.clear().draw();
@@ -367,26 +386,31 @@ function initMainPage() {
     table.draw();    
     
     // Write couponMember to database
-//    database.ref('users/林口運動中心/優惠券管理').set({
-//      優惠券會員: JSON.stringify(couponMember),
-//    }, function (error) {
-//      if (error) {
-//        //console.log(error);
-//        return 0;
-//      }
-//      console.log('Write to database successful');
-//    }); 
+    database.ref('users/林口運動中心/優惠券管理').set({
+      優惠券會員: JSON.stringify(couponMember),
+    }, function (error) {
+      if (error) {
+        //console.log(error);
+        return 0;
+      }
+      console.log('Write to database successful');
+    }); 
     
   });
 
   $('#couponMemberTable tbody').on('click', '.confirmUsingCoupon', function () {
-    var securityNum = Math.floor(Math.random()*9999+1000); 
-    var securityStr = "輸入確認碼: " + String(securityNum);
-    console.log(prompt(securityStr));
-    var confirmIt = confirm("請確定使用優惠券!");
-    
-    if (!confirmIt) return 0;    
     console.log("confirmUsingCoupon is clicked");
+    
+    var securityNum = Math.floor(Math.random()*8999+1000); 
+    var securityStr = "確定使用優惠券，請輸入確認碼: " + String(securityNum);
+    //console.log(prompt(securityStr));
+    var confirmIt = prompt(securityStr) == securityNum;
+    console.log("確認碼:", confirmIt);
+    
+    if (!confirmIt) {
+      alert("確認碼輸入錯誤，不進行確認動作");
+      return 0;    
+    }    
 
     //var data = couponMemberTable.row($(this)).data();
     var data = couponMemberTable.row($(this).parents('tr')).data();    
@@ -415,14 +439,14 @@ function initMainPage() {
     }   
     
     //console.log(couponMember[thisIndex][thisI][2]);
-    couponMember[thisIndex][thisI][2] = "已簽到";
+    couponMember[thisIndex][thisI][2] = "已確認";
 
     // Update couponMemberSet 及其 Table
     for (var i=0; i< couponMemberSet.length; i++){
       //console.log(couponMemberSet[i][0], data[0]);
       if (couponMemberSet[i][0] == data[0]) {
         //console.log("match");
-        couponMemberSet[i][6] = "已簽到";
+        couponMemberSet[i][2] = "已確認";
       };
     };
     
@@ -444,7 +468,7 @@ function initMainPage() {
     
   });  
 
-  $("#couponDetail").hide();
+  $("#couponDetailDiv").hide();
   
 //  $('#couponMemberTable tbody').on('click', '.resetButton', function () {
 //    var confirmIt = confirm("請確定要重置!");

@@ -118,7 +118,7 @@
   
 
   <!--  **** 優惠券細節的畫面，可以更新優惠券資料，使用及確認 **** -->
-  <div id="couponDetail" style="height: 600px; font-family:'Noto Sans TC'">
+  <div id="couponDetailDiv" style="height: 600px; font-family:'Noto Sans TC'">
     <button class="btn-blue" onclick="backToHome()" style="float: left"><i class="fa fa-arrow-left"></i>&nbsp 回到 優惠券管理</button>
     <h2 id="couponNumberDetail" style="margin-left: 200px" value="00">優惠券頁面</h2>
     <div ><br>
@@ -295,14 +295,13 @@
         }
          
         var couponMember =[
-          ["C0001", ["謝小憲", "已使用", "已確認"], ["許小琦", "已使用", "已確認"]],   
-          ["C0002", ["小白", "已使用", "已確認"],   ["小華", "已使用", "已確認"]],  
-          ["C0003", ["小白", "已使用", "已確認"],   ["小華", "已使用", "未確認"]],            
+          ["C0001", ["小白", "已使用", "已確認"], ["小華", "已使用", "已確認"]],   
+          ["C0002", ["小白", "已使用", "已確認"], ["小華", "已使用", "已確認"]],  
+          ["C0003", ["小白", "已使用", "未確認"], ["小華", "已使用", "未確認"]],            
         ];          
         
         database.ref('users/林口運動中心/優惠券管理').set({
           優惠券會員: JSON.stringify(couponMember),
-
         });
 
 
