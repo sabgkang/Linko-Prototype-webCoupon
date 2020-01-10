@@ -2,7 +2,7 @@ function initMainPage() {
   $("#loginDiv").hide();
   $("#addCoupon").hide();
 //  $("#coachTable").hide();
-  $("#couponDetail").hide();
+//  $("#couponDetail").hide();
   $("#newCoachInfo").hide();
   $("#memberDiv").hide();
   $("#addMemberInfo").hide();
@@ -44,7 +44,7 @@ function initMainPage() {
     }
 
     var dueIt = false;
-    dueIt = confirm("確定要課程過期!無法回復!");
+    dueIt = confirm("確定要將優惠券過期!無法回復!");
 
     if (dueIt) {
       var data = couponTable.row($(this).parents('tr')).data();
@@ -287,6 +287,7 @@ function initMainPage() {
   });
 
   var couponMemberTable = $('#couponMemberTable').DataTable({
+    order: [[ 2, "desc" ]],
     data: couponMemberSet,
     pageLength: 8,
     lengthChange: false,
@@ -317,7 +318,7 @@ function initMainPage() {
   });
   
   $('#couponMemberTable tbody').on('click', '.cancelUsingCoupon', function () {
-    var confirmIt = confirm("請確定已繳費!");
+    var confirmIt = confirm("NOT finish code yet 請確定要取消使用!");
     if (!confirmIt) return 0;
     
     console.log("cancelUsingCoupon is clicked");
@@ -326,37 +327,37 @@ function initMainPage() {
     var data = couponMemberTable.row($(this).parents('tr')).data();    
     //console.log(data[0]);
     
-    var thisCourse;
+    var thisCoupon;
     var thisIndex;
     couponMember.forEach(function(item, index, array) {
       //console.log(item[1][0]);
       if (item[0]== couponNumber) {
         //console.log(item, data[0]);
-        thisCourse = item;
+        thisCoupon = item;
         thisIndex = index;
       }
     });
       
     //console.log(thisCourse, thisIndex, data[0]);
       
-    var thisCourseLength = thisCourse.length;
+    var thisCouponLength = thisCoupon.length;
     var thisI;
-    for (var i = 0; i < thisCourseLength; i++) {
-      if (thisCourse[i][0] == data[0]) {
-        //console.log(thisCourse[i], thisIndex, i);
+    for (var i = 0; i < thisCouponLength; i++) {
+      if (thisCoupon[i][0] == data[0]) {
+        //console.log(thisCoupon[i], thisIndex, i);
         thisI = i;
       };
     }   
     
     //console.log(couponMember[thisIndex][thisI][0],couponMember[thisIndex][thisI][1]);
-    couponMember[thisIndex][thisI][1] = "已繳費";
+    couponMember[thisIndex][thisI][2] = "已確認";
 
     // Update couponMemberSet 及其 Table  
     for (var i=0; i< couponMemberSet.length; i++){
       //console.log(couponMemberSet[i][0], data[0]);
       if (couponMemberSet[i][0] == data[0]) {
         //console.log("match");
-        couponMemberSet[i][5] = "已繳費";
+        couponMemberSet[i][2] = "已確認";
       };
     };
     
@@ -366,20 +367,24 @@ function initMainPage() {
     table.draw();    
     
     // Write couponMember to database
-    database.ref('users/林口運動中心/優惠券管理').set({
-      課程會員: JSON.stringify(couponMember),
-    }, function (error) {
-      if (error) {
-        //console.log(error);
-        return 0;
-      }
-      console.log('Write to database successful');
-    }); 
+//    database.ref('users/林口運動中心/優惠券管理').set({
+//      優惠券會員: JSON.stringify(couponMember),
+//    }, function (error) {
+//      if (error) {
+//        //console.log(error);
+//        return 0;
+//      }
+//      console.log('Write to database successful');
+//    }); 
     
   });
 
   $('#couponMemberTable tbody').on('click', '.confirmUsingCoupon', function () {
-    var confirmIt = confirm("請確定已簽到!");
+    var securityNum = Math.floor(Math.random()*9999+1000); 
+    var securityStr = "輸入確認碼: " + String(securityNum);
+    console.log(prompt(securityStr));
+    var confirmIt = confirm("請確定使用優惠券!");
+    
     if (!confirmIt) return 0;    
     console.log("confirmUsingCoupon is clicked");
 
@@ -428,7 +433,7 @@ function initMainPage() {
     
     // Write couponMember to database
     database.ref('users/林口運動中心/優惠券管理').set({
-      課程會員: JSON.stringify(couponMember),
+      優惠券會員: JSON.stringify(couponMember),
     }, function (error) {
       if (error) {
         //console.log(error);
@@ -439,6 +444,8 @@ function initMainPage() {
     
   });  
 
+  $("#couponDetail").hide();
+  
 //  $('#couponMemberTable tbody').on('click', '.resetButton', function () {
 //    var confirmIt = confirm("請確定要重置!");
 //    if (!confirmIt) return 0;
@@ -492,7 +499,7 @@ function initMainPage() {
 //    
 //    // Write couponMember to database
 //    database.ref('users/林口運動中心/優惠券管理').set({
-//      課程會員: JSON.stringify(couponMember),
+//      優惠券會員: JSON.stringify(couponMember),
 //    }, function (error) {
 //      if (error) {
 //        //console.log(error);

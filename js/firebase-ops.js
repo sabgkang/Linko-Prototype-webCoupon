@@ -115,6 +115,8 @@ function readFromDB() {
 
     if (readTimes == toRead) $.loading.end();
   });  
+  
+  //couponMemberSet = [ ["姓名", "aaa", "bbb"] ];
 
 }
 

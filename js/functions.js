@@ -2,7 +2,7 @@ function addCoupon() {
   console.log("addCoupon");
 
   if (!isLogin) {
-    alert("必須登入後才能新增課程");
+    alert("必須登入後才能新增優惠券");
     return 0;
   }
 
@@ -368,7 +368,7 @@ function addMemberInfo() {
   memberData.push(dataToAdd);
 
 
-  // 課程寫入資料庫
+  // 客戶寫入資料庫
   database.ref('users/林口運動中心/客戶管理').set({
     會員資料: JSON.stringify(memberData),
   }, function (error) {
@@ -380,7 +380,7 @@ function addMemberInfo() {
   });
 
 
-  // 更新課程表格  
+  // 更新客戶表格  
   //  var memberTable = $('#memberTable').DataTable();
   //  memberTable.clear().draw();
   //  memberTable.rows.add(memberData);

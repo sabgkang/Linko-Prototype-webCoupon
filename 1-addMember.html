@@ -102,12 +102,12 @@
       <table id="myCouponsHistory" class="display" style="font-family: 'Noto Sans TC';width: 100% ">
         <thead>
           <tr id="table-header">
-            <th style="width: 120px">歷史課程編號</th>
-            <th>課程名稱</th>
+            <th style="width: 120px">歷史優惠券編號</th>
+            <th>優惠券名稱</th>
             <th style="width: 200px">老師</th>
             <th style="width: 120px">時間</th>
             <th style="width: 70px">卡路里燃燒</th>
-            <th style="width: 50px">課程人數</th>
+            <th style="width: 50px">優惠券人數</th>
             <th style="width: 190px">操作</th>
           </tr>
         </thead>
@@ -577,7 +577,7 @@
         
         //更新 couponMember to 資料庫                   
           database.ref('users/林口運動中心/優惠券管理').set({
-            課程會員: JSON.stringify(couponMember),
+            優惠券會員: JSON.stringify(couponMember),
           }, function(error){
                 if (error) {
                   //console.log(error);
@@ -617,7 +617,7 @@
           console.log("aaa");
           closeMyCoupons();
           database.ref('users/林口運動中心/優惠券管理').set({
-            課程會員: JSON.stringify(couponMember),
+            優惠券會員: JSON.stringify(couponMember),
           }, function(error){
                 if (error) {
                   //console.log(error);
@@ -744,7 +744,7 @@
           couponMember[couponIdx].push([userForAddingCourse, "未繳費", "未簽到"]);
           // Write couponMember to database
           database.ref('users/林口運動中心/優惠券管理').set({
-            課程會員: JSON.stringify(couponMember),
+            優惠券會員: JSON.stringify(couponMember),
           }, function(error){
                 if (error) {
                   //console.log(error);
