@@ -138,6 +138,7 @@
         <thead>
           <tr id="table-header">
             <th>客戶姓名</th>
+            <th>電話號碼</th>            
             <th>使用</th>
             <th>確認</th>
             <th style="width:  200px;">操作</th>
@@ -225,7 +226,7 @@
   <script type="text/javascript">
     var couponNum = 0; // Update from Database
     var inaddCoupon = false;
-    var version = " V0.1";
+    var version = " V0.5";
 
     $("#titleHeader").text("林口運動中心 - 優惠券管理"+version);
 
@@ -293,11 +294,24 @@
           alert("Please login first!");
           return 0;
         }
-         
+
+        var couponData =[
+          ["C0002", "TEST #2","2020-01-19",""]
+        ];
+        
+        var couponHistory =[
+          ["C0001", "TEST #1","2020-01-09",""]
+        ];
+        
+        database.ref('users/林口運動中心/優惠券').set({
+          現在優惠券: JSON.stringify(couponData),
+          過去優惠券: JSON.stringify(couponHistory),          
+        });
+        
+        
         var couponMember =[
-          ["C0001", ["小白", "已使用", "已確認"], ["小華", "已使用", "已確認"]],   
-          ["C0002", ["小白", "已使用", "已確認"], ["小華", "已使用", "已確認"]],  
-          ["C0003", ["小白", "已使用", "未確認"], ["小華", "已使用", "未確認"]],            
+          ["C0001", ["小白", "已使用", "已確認", "U002", "09XXXXX222"], ["小華", "已使用", "已確認", "U003", "09XXXXX333"]],   
+          ["C0002", ["小白", "已使用", "未確認", "U002", "09XXXXX222"], ["小華", "已使用", "未確認", "U003", "09XXXXX333"]],            
         ];          
         
         database.ref('users/林口運動中心/優惠券管理').set({

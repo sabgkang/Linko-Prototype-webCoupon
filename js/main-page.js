@@ -55,7 +55,7 @@ function initMainPage() {
     }
     
     var data = couponTable.row($(this).parents('tr')).data();
-    console.log("delete:" + data[0]);
+    console.log("due:" + data[0]);
 
     couponHistory.push(data);
 
@@ -153,14 +153,15 @@ function initMainPage() {
         var tmp1 = [];
         item.forEach(function (item1, index, array) {
           memberData.forEach(function (item2, index, array) {
-            if (item1[0] == item2[0]) {
+            if (item1[4] == item2[3]) {
               tmp1 = item2;
             };
           });
 
           // Convert 
-          var dataToAdd = tmp1.slice(0, 1);
+          var dataToAdd = tmp1.slice(0,1);
 
+          dataToAdd.push(tmp1.slice(3,4)[0]);
           dataToAdd.push(item1[1], item1[2]);
 
           couponMemberSet.push(dataToAdd);
@@ -298,12 +299,12 @@ function initMainPage() {
     pageLength: 8,
     lengthChange: false,
     deferRender: true,
-    columns: [{ //title: "優惠券編號"
+    columns: [{ //title: "客戶姓名"
         className: "centerCell"
               },
-//      { //title: "優惠券內容"
-//        //className: "centerCell"
-//              },
+      { //title: "電話號碼"
+        className: "centerCell"
+              },
       {
         //title: "使用"
         className: "centerCell"
@@ -358,7 +359,7 @@ function initMainPage() {
     var thisCouponLength = thisCoupon.length;
     var thisI;
     for (var i = 0; i < thisCouponLength; i++) {
-      if (thisCoupon[i][0] == data[0]) {
+      if (thisCoupon[i][4] == data[1]) { //比對用戶電話號碼
         //console.log(thisCoupon[i], thisIndex, i);
         thisI = i;
       };
@@ -366,19 +367,19 @@ function initMainPage() {
     
     //console.log(couponMember[thisIndex][thisI][0],couponMember[thisIndex][thisI][1]);
     //couponMember[thisIndex][thisI][1] = "未使用";
-    couponMember[thisIndex].splice(thisI, 1);
+    couponMember[thisIndex].splice(thisI, 1); //整個 ["小白","已使用","已確認","U002","09XXXXX222"] 都刪掉
 
     // Update couponMemberSet 及其 Table  
     for (var i=0; i< couponMemberSet.length; i++){
       //console.log(couponMemberSet[i][0], data[0]);
-      if (couponMemberSet[i][0] == data[0]) {
+      if (couponMemberSet[i][0] == data[0]) { 
         //console.log("match");
         //couponMemberSet[i][1] = "未使用";
         thisI = i;
       };
     };
     
-    couponMemberSet.splice(thisI, 1);
+    couponMemberSet.splice(thisI, 1); //整個 ["小白","已使用","已確認","U002","09XXXXX222"] 都刪掉
     
     var table = $('#couponMemberTable').DataTable();
     table.clear().draw();
@@ -416,24 +417,24 @@ function initMainPage() {
     var data = couponMemberTable.row($(this).parents('tr')).data();    
     //console.log(data[0]);
     
-    var thisCourse;
+    var thisCoupon;
     var thisIndex;
     couponMember.forEach(function(item, index, array) {
       //console.log(item[1][0]);
       if (item[0]== couponNumber) {
         //console.log(item, data[0]);
-        thisCourse = item;
+        thisCoupon = item;
         thisIndex = index;
       }
     });
       
     //console.log(thisCourse, thisIndex, data[0]);
       
-    var thisCourseLength = thisCourse.length;
+    var thisCouponLength = thisCoupon.length;
     var thisI;
-    for (var i = 0; i < thisCourseLength; i++) {
-      if (thisCourse[i][0] == data[0]) {
-        //console.log(thisCourse[i], thisIndex, i);
+    for (var i = 0; i < thisCouponLength; i++) {
+      if (thisCoupon[i][4] == data[1]) {
+        //console.log(thisCoupon[i], thisIndex, i);
         thisI = i;
       };
     }   
@@ -445,8 +446,8 @@ function initMainPage() {
     for (var i=0; i< couponMemberSet.length; i++){
       //console.log(couponMemberSet[i][0], data[0]);
       if (couponMemberSet[i][0] == data[0]) {
-        //console.log("match");
-        couponMemberSet[i][2] = "已確認";
+        console.log("match");
+        couponMemberSet[i][3] = "已確認";
       };
     };
     

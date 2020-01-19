@@ -1,32 +1,10 @@
-Bug to Fix:
-1. LINE Id 有 33字元，顯示超長，所以在客戶管理時，將 memberData 的 LineId 簡短為 UXXXX..YYYY，但刪除客戶時，會將簡化的 memberData 寫回資料庫，造成會員比對錯誤。@ Line 240 in 1-addMember.html =====> Fixed 2020-01-06 V0.98
-2. 重複週期 新增課程 會只有增加最後一個課程 到 couponMember ==> Fixed 2020-01-07 V0.99,  function.js line#85 移到 line#68
+修改 webCoupon-For-LINE 使用優惠券需要加入電話號碼
 
 
-用 JavaScript 取得目前網址與其它網址參數簡單語法 http://www.wibibi.com/info.php?tid=82
-<script type="text/javascript">alert(location.href);</script>
+==DONE===
+必須配合優惠券資料加上 LineId 和電話號碼修改
+客戶管理的 使用優惠券 (OK)
+   下的 使用 (OK)
 
-假設我們的網址是：http://www.wibibi.com:80/test.html?tid=222#333
-馬上就寫個簡單的範例來取得所有網址資訊
-<script type="text/javascript">
-　alert('location.href: '+location.href);　//輸出値為 location.href: http://www.wibibi.com/test.html?tid=222#333
-　alert('location.protocol: '+location.protocol);　//輸出値為 location.protocol: http:
-　alert('location.hostname: '+location.hostname);　//輸出値為 location.hostname: www.wibibi.com
-　alert('location.host: '+location.host);　//輸出値為 location.host: www.wibibi.com
-　alert('location.port: '+location.port);　//輸出値為 80
-　alert('location.pathname: '+location.pathname);　//輸出値為 location.pathname: /test.html
-　alert('location.search: '+location.search);　//輸出値為 location.search: ?tid=222
-　alert('location.hash: '+location.hash);　//輸出値為 location.hash: #333
-</script>
-
-
-HTML5 Geolocation
-https://www.w3schools.com/html/html5_geolocation.asp
-用 GPS 定位報到
-
-jQuery 套件產生台灣地址下拉選單選項
-https://github.com/essoduke/jQuery-TWzipcode
-參考 本地的 twzipcode_demo.html
-
-
-"[[\"U0001\",\"TEST 1\",\"測試 老師 #1\",\"2019-12-20 18:00\",\"100\",\"110\",\"alice\",\"120\",\"130\"]]"
+客戶管理的 已使用優惠券 (OK) 
+   下的 取消使用 (OK)

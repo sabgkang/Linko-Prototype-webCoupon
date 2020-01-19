@@ -36,7 +36,7 @@
       <thead>
         <tr id="table-header">
           <th style="width: 80px">姓名</th>
-          <th style="width: 80px">LINE ID</th>
+<!--          <th style="width: 80px">LINE ID</th>-->
           <th style="width: 50px">性別</th>
           <th style="width: 100px">生日</th>
           <th style="width: 50px">電話</th>
@@ -82,7 +82,7 @@
     <h1 id="客戶已使用優惠券">已使用優惠券</h1>
     <hr>
     <div id="myCoupons">
-      <button class="btn-blue" id="useCouponBtn" onclick="closeMyCoupons()">返回</button>
+      <button class="btn-blue" id="backBtn" onclick="closeMyCoupons()">返回</button>
 
       <table id="usedCouponsTable" class="display" style="font-family: 'Noto Sans TC';width: 100%">
         <thead>
@@ -180,7 +180,9 @@
     var username;
     
     var userForAddingCoupon;
-    var userForCancelCourse;
+    var userForCancelCoupon;
+    var userPhoneNumberForCancelCoupon;
+    var userPhoneNumberForUsingCoupon;
 
     // Monitoring AuthState
     firebase.auth().onAuthStateChanged(function(user) {
@@ -233,15 +235,15 @@
       memberData = JSON.parse(result.會員資料);
       
       // 轉換 userId，從 33字元長度 "Uaabb....ccdd" ==> 顯示 "Uaabb..ccdd"
-      memberLineId=[];
-      memberData.forEach(function(member, index, array){
-        memberLineId.push(member[1]);
-        var head, tail;
-        head=member[1].slice(0,5);
-        tail=member[1].slice(29,33)
-        //console.log(head+".."+tail);
-        member[1]=head.toUpperCase()+".."+tail.toUpperCase();
-      });
+//      memberLineId=[];
+//      memberData.forEach(function(member, index, array){
+//        memberLineId.push(member[1]);
+//        var head, tail;
+//        head=member[1].slice(0,5);
+//        tail=member[1].slice(29,33)
+//        //console.log(head+".."+tail);
+//        member[1]=head.toUpperCase()+".."+tail.toUpperCase();
+//      });
       
       buildMemberTable();      
       if (readTimes == toRead) {
@@ -266,10 +268,10 @@
         columns: [{ //title: 姓名
             className: "centerCell"
           },
-          {
-            //title: LINE ID
-            className: "centerCell"
-          },
+//          {
+//            //title: LINE ID
+//            className: "centerCell"
+//          },
           { //title: "姓別"
             className: "centerCell"
           },
@@ -313,9 +315,11 @@
 
         var data = memberTable.row($(this).parents('tr')).data();
         userName = data[0];
+        var userPhoneNumber = data[3];
         
         // 取消課程用
-        userForCancelCourse = data[0];
+        userForCancelCoupon = data[0];
+        userPhoneNumberForCancelCoupon = data[3];
 
         $("#客戶已使用優惠券").text(data[0] + " - 已使用優惠券");
 
@@ -325,7 +329,7 @@
           var itemLength = item.length;
           for (var i = 0; i < itemLength; i++) {
             //console.log(i, item[i][0]);
-            if (item[i][0] == userName) {
+            if (item[i][4] == userPhoneNumber) {
               myCouponsNumbers.push(item[0]);
             };
           }
@@ -346,27 +350,27 @@
         });
         
         // Modify my myCouponsData 課程人數 to 繳費狀況 based on couponMember
-        myCouponsData.forEach(function(coupon, index, array){
-          //console.log(coupon[0]); // 課程編號
-          
-          couponMember.forEach(function(item, index, array){
-            if (item[0] == coupon[0]) {
-              //console.log(item);
-              
-              for (var i=1; i<item.length;i++){
-                //console.log(item[i][0], item[i][1]);
-                
-                if (item[i][0]==userName) {
-                  //console.log(userName, item[i][1]);
-                  coupon[5]=item[i][1];
-                  //console.log("bbb", coupon);
-                }
-              }
-            }  
-          });
-          
-          //console.log("next");
-        });
+//        myCouponsData.forEach(function(coupon, index, array){
+//          //console.log(coupon[0]); // 優惠券編號
+//          
+//          couponMember.forEach(function(item, index, array){
+//            if (item[0] == coupon[0]) {
+//              //console.log(item);
+//              
+//              for (var i=1; i<item.length;i++){
+//                //console.log(item[i][0], item[i][1]);
+//                
+//                if (item[i][0]==userName) {
+//                  //console.log(userName, item[i][1]);
+//                  coupon[5]=item[i][1];
+//                  //console.log("bbb", coupon);
+//                }
+//              }
+//            }  
+//          });
+//          
+//          //console.log("next");
+//        });
         
         myCouponsHistory = [];
         couponHistory.forEach(function(coupon, index, array) {
@@ -398,8 +402,11 @@
         console.log("checkNewCoupons is clicked");
 
         var data = memberTable.row($(this).parents('tr')).data();
+        var userPhoneNumber = data[3];
         userName = data[0];
         userForAddingCoupon = data[0]; // simple patch
+        
+        userPhoneNumberForUsingCoupon = data[3];
         
         // 尋找未使用的優惠券
         var myCouponsNumbers = [];
@@ -409,7 +416,7 @@
           var matched = false;
           for (var i = 0; i < itemLength; i++) {
             //console.log(i, item[i][0]);
-            if (item[i][0] == userName) {
+            if (item[i][4] == userPhoneNumber) {
               matched = true;
             };
           }
@@ -453,18 +460,13 @@
 
         var memberTable = $('#memberTable').DataTable();
         var data = memberTable.row($(this).parents('tr')).data();
-        userName = data[0];
+        var userPhoneNumber = data[3];
 
-        console.log(userName);
-
-        // memberData 取回 完整的 LINE Id
-        memberData.forEach(function(member, index, array){
-          member[1]=memberLineId[index];
-        });
+        console.log(userPhoneNumber);
         
         // 刪除客戶
         memberData.forEach(function(member, index, array) {
-          if (member[0] == userName) {
+          if (member[3] == userPhoneNumber) {
             memberData.splice(index, 1);
           }
         });
@@ -583,7 +585,7 @@
           if (coupon[0]==couponName) {
             for (var i=0; i< coupon.length; i++) {
               //console.log(coupon[i][0]);
-              if (coupon[i][0]==userForCancelCourse) {
+              if (coupon[i][4]==userPhoneNumberForCancelCoupon) {
                 //alert("已經使用過了");
                 console.log(couponMember[index][i]);
                 alreadyInUse = true;
@@ -697,7 +699,6 @@
       // ============ Function for useCouponBtn ================================================== 
       $('#notUsedCouponTable tbody').on('click', '.useCouponBtn', function() {
         console.log("useCouponBtn is clicked");
-        
         var couponsTable = $('#notUsedCouponTable').DataTable();
         var data = couponsTable.row($(this).parents('tr')).data();
         var couponName = data[0];
@@ -708,16 +709,7 @@
           if (coupon[0]==couponName) {
             //console.log(couponName);
             couponIdx = index;
-            coupon.push([userForAddingCoupon, "已使用", "未確認"]);
-            
-//            for (var i=0; i< coupon.length; i++) {
-//              //console.log(coupon[i][0]);
-//              if (coupon[i][0]==userForAddingCoupon) {
-//                //alert("您已經報過此課程了");
-//                //alreadyInUse = true;
-//                return(0); //只跳出 forEach 迴圈
-//              }
-//            };
+            coupon.push([userForAddingCoupon, "已使用", "未確認", "", userPhoneNumberForUsingCoupon]);
           }
         }) 
         
@@ -790,13 +782,13 @@
         $.loading.end();
         
         // 轉換 userId，從 33字元長度 "Uaabb....ccdd" ==> 顯示 "Uaabb..ccdd"
-        memberData.forEach(function(member, index, array){
-          var head, tail;
-          head=member[1].slice(0,5);
-          tail=member[1].slice(29,33)
-          //console.log(head+".."+tail);
-          member[1]=head.toUpperCase()+".."+tail.toUpperCase();
-        });        
+//        memberData.forEach(function(member, index, array){
+//          var head, tail;
+//          head=member[1].slice(0,5);
+//          tail=member[1].slice(29,33)
+//          //console.log(head+".."+tail);
+//          member[1]=head.toUpperCase()+".."+tail.toUpperCase();
+//        });        
 
         var memberTable = $('#memberTable').DataTable();
         memberTable.clear().draw();
